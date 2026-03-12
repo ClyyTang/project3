@@ -1,0 +1,26 @@
+# 模型权重和checkpoint
+checkpoints/
+*.pt
+*.bin
+*.safetensors
+*.pkl
+
+# 数据文件
+data/*.json
+images/
+0_sampling/*.json
+1_cot_generation/outputs/
+2_data_merge/*.json
+
+# 日志和临时文件
+*.log
+__pycache__/
+*.pyc
+nohup.out
+.ipynb_checkpoints/
+
+# vllm 启动脚本中的敏感信息
+vllm_qwen.bash
+
+# 系统文件
+.DS_Store

@@ -1,0 +1,7 @@
+[
+    {
+        "key": "EMPTY",
+        "model": "Qwen3-VL-32B-Instruct",
+        "base_url": "http://localhost:9998/v1"
+    }
+]
