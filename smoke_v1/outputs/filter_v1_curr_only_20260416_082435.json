@@ -1,0 +1,1146 @@
+{
+  "_meta": {
+    "timestamp": "20260416_082435",
+    "input_file": "/home/ubuntu/data1/lyy/full_rlds_project-3/smoke_v1/outputs/generate_v1_smoke_curr_only_20260415_174357.json",
+    "input_meta": {
+      "timestamp": "20260415_174357",
+      "variant": "curr_only",
+      "total_results": 20,
+      "ok_count": 20,
+      "fail_count": 0,
+      "aborted_by_circuit_breaker": false,
+      "mode_order": [
+        "A2",
+        "C"
+      ],
+      "model": "Qwen3-VL-32B-Instruct",
+      "temperature": 0.2,
+      "max_tokens": 1024,
+      "insurance_text": "IMPORTANT ADDITIONAL RULES:\n1. Prioritize the most reliable spatial evidence from the provided inputs.\n2. Reasoning should be based on observable spatial properties (bearing, distance, occlusion). Avoid fine visual details.",
+      "prompt_module": "prompt_v1_curr_only",
+      "input_file": "/home/ubuntu/data1/lyy/full_rlds_project-3/smoke_v1/smoke_input_10_curr_only.json"
+    },
+    "total_results": 20,
+    "keep_count": 8,
+    "by_mode": {
+      "A2": {
+        "total": 10,
+        "keep": 3
+      },
+      "C": {
+        "total": 10,
+        "keep": 5
+      }
+    },
+    "rule_fail_count": {
+      "R2": 12
+    },
+    "detail_fail_count": {
+      "R2_action_strict_fail(pred=8,gt=0)": 2,
+      "R2_action_strict_fail(pred=8,gt=3)": 1,
+      "R2_action_strict_fail(pred=1,gt=5)": 2,
+      "R2_action_strict_fail(pred=3,gt=8)": 2,
+      "R2_action_strict_fail(pred=9,gt=8)": 1,
+      "R2_action_strict_fail(pred=0,gt=9)": 2,
+      "R2_action_strict_fail(pred=5,gt=9)": 2
+    },
+    "soft_stats": {
+      "a2_c_jaccard": {
+        "per_sample": [
+          [
+            0,
+            0.591
+          ],
+          [
+            1,
+            0.569
+          ],
+          [
+            2,
+            0.706
+          ],
+          [
+            3,
+            0.507
+          ],
+          [
+            4,
+            0.529
+          ],
+          [
+            5,
+            0.618
+          ],
+          [
+            6,
+            0.614
+          ],
+          [
+            7,
+            0.566
+          ],
+          [
+            8,
+            0.776
+          ],
+          [
+            9,
+            0.651
+          ]
+        ],
+        "mean": 0.613
+      },
+      "negative_distance_word_count": 1,
+      "strict_match_count": 8,
+      "mixed_match_count": 9,
+      "strict_vs_mixed_gap": 1
+    }
+  },
+  "results": [
+    {
+      "input_digest": "sample0_curr20250107_072005_3_modeA2",
+      "sample_id": 0,
+      "target_action": 0,
+      "target_group": "stop",
+      "is_last_step": true,
+      "mode": "A2",
+      "prompt_hash": "6591caf00b01",
+      "message_hash": "78f6df1f70a5",
+      "ok": true,
+      "latency": 40.61,
+      "retry_count": 0,
+      "response_text": "<thinking>\n[Progress] The history action [9] indicates a long-range forward movement has already been executed. The current observation confirms the target — a dark, modern skyscraper with evenly spaced illuminated vertical stripes and medium height — is now visible. This matches the description in subtask 1. Since the target is visible and the subtask is to proceed straight towards it, the subtask is not yet complete unless we are at the goal. The active subtask remains subtask 1.\n\n[Observation] The target skyscraper is directly ahead at a mid-range distance. It is centered in the view, with no indication of being to the left or right. Other buildings are nearby, but the target is clearly in front and distinguishable by its illuminated stripes.\n\n[Reasoning] The target is ahead at mid-range, and the subtask requires proceeding straight toward it. A mid-range forward move (fast_forward) is appropriate to continue closing the distance without overshooting. The target is not yet close enough to stop.\nAlternative considered: super_forward (9); Rejected because the target is already at mid-range, and a long-range step (~9m) might overshoot the goal, especially since the target is already clearly visible and centered.\n\n[Decision] fast_forward\n</thinking>\n<next_action>8</next_action>",
+      "error": null,
+      "timestamp": "2026-04-15T17:31:16.261181",
+      "keep": false,
+      "fail_reasons": [
+        "R2_action_strict_fail(pred=8,gt=0)"
+      ],
+      "rule_results": {
+        "R1_xml_parse": true,
+        "R2_action_strict": false,
+        "R3_4_sections": true,
+        "R4_direction_word": true,
+        "R5_distance_word": true,
+        "R6_alternative_line": true,
+        "R7_decision_next_match": true
+      },
+      "parsed": {
+        "pred": 8,
+        "sections": {
+          "[Progress]": "The history action [9] indicates a long-range forward movement has already been ...",
+          "[Observation]": "The target skyscraper is directly ahead at a mid-range distance. It is centered ...",
+          "[Reasoning]": "The target is ahead at mid-range, and the subtask requires proceeding straight t...",
+          "[Decision]": "fast_forward"
+        },
+        "direction_hits": [
+          "ahead"
+        ],
+        "distance_hits": [
+          "close",
+          "long-range",
+          "mid-range"
+        ],
+        "decision_name": "fast_forward",
+        "alternative_lines_count": 1,
+        "alternative": {
+          "name": "super_forward",
+          "id": 9,
+          "reason": "the target is already at mid-range, and a long-range step (~9m) might overshoot "
+        }
+      }
+    },
+    {
+      "input_digest": "sample0_curr20250107_072005_3_modeC",
+      "sample_id": 0,
+      "target_action": 0,
+      "target_group": "stop",
+      "is_last_step": true,
+      "mode": "C",
+      "prompt_hash": "6591caf00b01",
+      "message_hash": "e46d79692f0d",
+      "ok": true,
+      "latency": 38.35,
+      "retry_count": 0,
+      "response_text": "<thinking>\n[Progress] The history action [9] indicates a long-range forward movement has already been executed. The current observation confirms the target — a dark, modern skyscraper with evenly spaced illuminated vertical stripes and medium height — is now visible. This matches the description in subtask 1. Therefore, subtask 1 is active and partially completed; the target is in view but likely still at a distance.\n\n[Observation] The target skyscraper is directly ahead, centered in the field of view, and appears at mid-to-far range. It is surrounded by other high-rises, but its distinct striped illumination makes it identifiable. The drone is not yet close enough to consider the task complete.\n\n[Reasoning] The target is ahead at mid-to-far range, and the instruction is to proceed straight toward it. Given the distance, a mid-range forward move is appropriate to continue closing the gap without overshooting. The previous long-range move (action 9) has brought the drone closer, but further progress is needed.\nAlternative considered: stop (0); Rejected because the target is still at a mid-to-far distance ahead, and stopping now would halt progress toward the goal.\n\n[Decision] fast_forward\n</thinking>\n<next_action>8</next_action>",
+      "error": null,
+      "timestamp": "2026-04-15T17:31:54.631309",
+      "keep": false,
+      "fail_reasons": [
+        "R2_action_strict_fail(pred=8,gt=0)"
+      ],
+      "rule_results": {
+        "R1_xml_parse": true,
+        "R2_action_strict": false,
+        "R3_4_sections": true,
+        "R4_direction_word": true,
+        "R5_distance_word": true,
+        "R6_alternative_line": true,
+        "R7_decision_next_match": true
+      },
+      "parsed": {
+        "pred": 8,
+        "sections": {
+          "[Progress]": "The history action [9] indicates a long-range forward movement has already been ...",
+          "[Observation]": "The target skyscraper is directly ahead, centered in the field of view, and appe...",
+          "[Reasoning]": "The target is ahead at mid-to-far range, and the instruction is to proceed strai...",
+          "[Decision]": "fast_forward"
+        },
+        "direction_hits": [
+          "ahead"
+        ],
+        "distance_hits": [
+          "closer",
+          "far",
+          "further",
+          "long-range",
+          "mid-range"
+        ],
+        "decision_name": "fast_forward",
+        "alternative_lines_count": 1,
+        "alternative": {
+          "name": "stop",
+          "id": 0,
+          "reason": "the target is still at a mid-to-far distance ahead, and stopping now would halt "
+        }
+      }
+    },
+    {
+      "input_digest": "sample1_curr20250101_220658_3_modeA2",
+      "sample_id": 1,
+      "target_action": 1,
+      "target_group": "forward_family",
+      "is_last_step": false,
+      "mode": "A2",
+      "prompt_hash": "434e2fec20e6",
+      "message_hash": "c41aef809ba5",
+      "ok": true,
+      "latency": 42.33,
+      "retry_count": 0,
+      "response_text": "<thinking>\n[Progress] History actions include [9], indicating a long-range forward movement has already been executed. The current observation shows both the modern building with a large white facade and the medium-sized modern office building with striped glass windows and white vertical panels (colored white and light blue). This means subtask 1 (\"Proceed towards the modern building with a large white facade\") is complete, and subtask 2 (\"Slightly turn right\") has been implicitly executed (since the target of subtask 3 is now visible adjacent to the white facade building). The active subtask is subtask 3: \"Continue directly ahead to a medium-sized modern office building featuring striped glass windows with white vertical panels, colored in white and light blue.\"\n\n[Observation] The target building (striped glass windows, white and light blue) is directly ahead and adjacent to the white facade building. It is visible in the current frame, indicating it is at close to near range.\n\n[Reasoning] The target building is already in front at close range, so no further turning or strafing is needed. The subtask requires continuing directly ahead to it, and since it is already visible and close, a short forward movement will bring the drone to the target. \nAlternative considered: stop (0); Rejected because the target is not yet reached — it is close but not directly under the drone; a short forward step is needed to complete the approach.\n\n[Decision] forward\n</thinking>\n<next_action>1</next_action>",
+      "error": null,
+      "timestamp": "2026-04-15T17:32:36.964797",
+      "keep": true,
+      "fail_reasons": [],
+      "rule_results": {
+        "R1_xml_parse": true,
+        "R2_action_strict": true,
+        "R3_4_sections": true,
+        "R4_direction_word": true,
+        "R5_distance_word": true,
+        "R6_alternative_line": true,
+        "R7_decision_next_match": true
+      },
+      "parsed": {
+        "pred": 1,
+        "sections": {
+          "[Progress]": "History actions include [9], indicating a long-range forward movement has alread...",
+          "[Observation]": "The target building (striped glass windows, white and light blue) is directly ah...",
+          "[Reasoning]": "The target building is already in front at close range, so no further turning or...",
+          "[Decision]": "forward"
+        },
+        "direction_hits": [
+          "front",
+          "ahead"
+        ],
+        "distance_hits": [
+          "close",
+          "further"
+        ],
+        "decision_name": "forward",
+        "alternative_lines_count": 1,
+        "alternative": {
+          "name": "stop",
+          "id": 0,
+          "reason": "the target is not yet reached — it is close but not directly under the drone; a "
+        }
+      }
+    },
+    {
+      "input_digest": "sample1_curr20250101_220658_3_modeC",
+      "sample_id": 1,
+      "target_action": 1,
+      "target_group": "forward_family",
+      "is_last_step": false,
+      "mode": "C",
+      "prompt_hash": "434e2fec20e6",
+      "message_hash": "07db913578ae",
+      "ok": true,
+      "latency": 39.96,
+      "retry_count": 0,
+      "response_text": "<thinking>\n[Progress] History actions include [9], indicating a long-range forward movement has already been executed. The current observation shows the target building — a medium-sized modern office building with striped glass windows and white vertical panels in white and light blue — is now visible. This matches subtask 3’s description. Subtasks 1 and 2 (proceed to white facade, then slightly turn right) have been completed as the drone has reached the correct heading and location. The active subtask is subtask 3: continue directly ahead to the target building.\n\n[Observation] The target building is directly ahead at close range. It is centered in the view, with its striped glass windows and white vertical panels clearly visible. The building is adjacent to a tall structure with a large white facade, which was the initial target of subtask 1, confirming we are in the correct area.\n\n[Reasoning] The target building is directly ahead and already close, so a short forward movement is sufficient to reach it. Since the building is close and centered, continuing forward will complete the task without overshooting. \nAlternative considered: super_forward (9); Rejected because the target is already close in front; super_forward (9) is a long-range ~9m step that would carry past the goal.\n\n[Decision] forward\n</thinking>\n<next_action>1</next_action>",
+      "error": null,
+      "timestamp": "2026-04-15T17:33:16.940110",
+      "keep": true,
+      "fail_reasons": [],
+      "rule_results": {
+        "R1_xml_parse": true,
+        "R2_action_strict": true,
+        "R3_4_sections": true,
+        "R4_direction_word": true,
+        "R5_distance_word": true,
+        "R6_alternative_line": true,
+        "R7_decision_next_match": true
+      },
+      "parsed": {
+        "pred": 1,
+        "sections": {
+          "[Progress]": "History actions include [9], indicating a long-range forward movement has alread...",
+          "[Observation]": "The target building is directly ahead at close range. It is centered in the view...",
+          "[Reasoning]": "The target building is directly ahead and already close, so a short forward move...",
+          "[Decision]": "forward"
+        },
+        "direction_hits": [
+          "front",
+          "ahead"
+        ],
+        "distance_hits": [
+          "close",
+          "long-range"
+        ],
+        "decision_name": "forward",
+        "alternative_lines_count": 1,
+        "alternative": {
+          "name": "super_forward",
+          "id": 9,
+          "reason": "the target is already close in front; super_forward (9) is a long-range ~9m step"
+        }
+      }
+    },
+    {
+      "input_digest": "sample2_curr20250102_002418_3_modeA2",
+      "sample_id": 2,
+      "target_action": 2,
+      "target_group": "turn_family",
+      "is_last_step": false,
+      "mode": "A2",
+      "prompt_hash": "fa0caea2e9ee",
+      "message_hash": "ffca47ca6400",
+      "ok": true,
+      "latency": 42.62,
+      "retry_count": 0,
+      "response_text": "<thinking>\n[Progress] History actions include [9], indicating a long-range forward movement has already been executed. The current observation confirms that the large dark gray building with uniformly spaced horizontal windows is now visible — matching subtask 1. Additionally, the tall, narrow dark blue skyscraper (target of subtask 2) is also visible adjacent to it. Therefore, subtask 1 is complete. The active subtask is subtask 2: \"slightly turn left and head straight toward the dark blue skyscraper\".\n\n[Observation] The dark blue skyscraper is located to the left of the current heading, at close to mid-range distance, adjacent to the dark gray building which is now in front or slightly to the right.\n\n[Reasoning] Since subtask 2 requires a slight left turn followed by heading straight toward the dark blue skyscraper, and the skyscraper is currently to the left at close range, the next logical step is to rotate left to align the heading toward it. A turn in place is appropriate here because the target is already visible and close, and no further forward movement is needed before reorienting.\nAlternative considered: forward (1); Rejected because the target is to the left, not directly ahead, and moving forward without turning would carry the drone away from the intended path toward the skyscraper.\n\n[Decision] turn_left\n</thinking>\n<next_action>2</next_action>",
+      "error": null,
+      "timestamp": "2026-04-15T17:33:59.557494",
+      "keep": true,
+      "fail_reasons": [],
+      "rule_results": {
+        "R1_xml_parse": true,
+        "R2_action_strict": true,
+        "R3_4_sections": true,
+        "R4_direction_word": true,
+        "R5_distance_word": true,
+        "R6_alternative_line": true,
+        "R7_decision_next_match": true
+      },
+      "parsed": {
+        "pred": 2,
+        "sections": {
+          "[Progress]": "History actions include [9], indicating a long-range forward movement has alread...",
+          "[Observation]": "The dark blue skyscraper is located to the left of the current heading, at close...",
+          "[Reasoning]": "Since subtask 2 requires a slight left turn followed by heading straight toward ...",
+          "[Decision]": "turn_left"
+        },
+        "direction_hits": [
+          "left",
+          "ahead"
+        ],
+        "distance_hits": [
+          "close",
+          "further"
+        ],
+        "decision_name": "turn_left",
+        "alternative_lines_count": 1,
+        "alternative": {
+          "name": "forward",
+          "id": 1,
+          "reason": "the target is to the left, not directly ahead, and moving forward without turnin"
+        }
+      }
+    },
+    {
+      "input_digest": "sample2_curr20250102_002418_3_modeC",
+      "sample_id": 2,
+      "target_action": 2,
+      "target_group": "turn_family",
+      "is_last_step": false,
+      "mode": "C",
+      "prompt_hash": "fa0caea2e9ee",
+      "message_hash": "6a16e81add32",
+      "ok": true,
+      "latency": 38.82,
+      "retry_count": 0,
+      "response_text": "<thinking>\n[Progress] History actions include [9], indicating a long-range forward movement has already been executed. The current observation confirms that the large dark gray building with uniformly spaced horizontal windows is now visible — matching subtask 1. Additionally, the tall, narrow dark blue skyscraper with a grid-like structure and vertical panels is also visible adjacent to it. Therefore, subtask 1 is complete. The active subtask is subtask 2: \"slightly turn left and head straight toward the dark blue skyscraper.\"\n\n[Observation] The dark blue skyscraper is located to the left of the current heading, adjacent to the dark gray building, and appears at close to mid-range distance. It is clearly visible and distinct in the frame.\n\n[Reasoning] Since subtask 2 requires a slight left turn to align with the dark blue skyscraper, and the target is currently to the left at close range, the next logical action is to rotate left to face it directly. A turn is necessary before proceeding forward to ensure heading alignment.\nAlternative considered: forward (1); Rejected because the target is to the left, not directly ahead; moving forward without turning would not align with the required heading for subtask 2.\n\n[Decision] turn_left\n</thinking>\n<next_action>2</next_action>",
+      "error": null,
+      "timestamp": "2026-04-15T17:34:38.393652",
+      "keep": true,
+      "fail_reasons": [],
+      "rule_results": {
+        "R1_xml_parse": true,
+        "R2_action_strict": true,
+        "R3_4_sections": true,
+        "R4_direction_word": true,
+        "R5_distance_word": true,
+        "R6_alternative_line": true,
+        "R7_decision_next_match": true
+      },
+      "parsed": {
+        "pred": 2,
+        "sections": {
+          "[Progress]": "History actions include [9], indicating a long-range forward movement has alread...",
+          "[Observation]": "The dark blue skyscraper is located to the left of the current heading, adjacent...",
+          "[Reasoning]": "Since subtask 2 requires a slight left turn to align with the dark blue skyscrap...",
+          "[Decision]": "turn_left"
+        },
+        "direction_hits": [
+          "left",
+          "ahead"
+        ],
+        "distance_hits": [
+          "close"
+        ],
+        "decision_name": "turn_left",
+        "alternative_lines_count": 1,
+        "alternative": {
+          "name": "forward",
+          "id": 1,
+          "reason": "the target is to the left, not directly ahead; moving forward without turning wo"
+        }
+      }
+    },
+    {
+      "input_digest": "sample3_curr20250115_081115_modeA2",
+      "sample_id": 3,
+      "target_action": 3,
+      "target_group": "turn_family",
+      "is_last_step": false,
+      "mode": "A2",
+      "prompt_hash": "73f4d7f94e84",
+      "message_hash": "a16e2377fd2a",
+      "ok": true,
+      "latency": 39.48,
+      "retry_count": 0,
+      "response_text": "<thinking>\n[Progress] History Actions: [1] — one short forward movement has been executed. Subtask 1 is active: ascending towards the medium-sized, dark gray water tower with a cylindrical base and conical top. The current observation shows this water tower in the distance, confirming we are en route to it. Subtask 2 and beyond are not yet active.\n\n[Observation] The dark gray water tower (target of subtask 1) is visible in the distance, ahead and slightly to the right. The second water tower (dark brown/black, elevated on legs) is also visible, further ahead and to the right. The large black commercial building is below, indicating we are currently at an elevated position.\n\n[Reasoning] The target for subtask 1 is ahead and distant. Since we are ascending toward it and it is still far, a mid-range forward movement is appropriate to close the distance without overshooting. The drone is already moving forward, and continuing forward will bring us closer to the first water tower.\nAlternative considered: ascend (4); Rejected because the target is ahead at a distant range, and forward movement is needed to approach it; ascending alone would not reduce horizontal distance to the target.\n\n[Decision] fast_forward\n</thinking>\n<next_action>8</next_action>",
+      "error": null,
+      "timestamp": "2026-04-15T17:35:17.871639",
+      "keep": false,
+      "fail_reasons": [
+        "R2_action_strict_fail(pred=8,gt=3)"
+      ],
+      "rule_results": {
+        "R1_xml_parse": true,
+        "R2_action_strict": false,
+        "R3_4_sections": true,
+        "R4_direction_word": true,
+        "R5_distance_word": true,
+        "R6_alternative_line": true,
+        "R7_decision_next_match": true
+      },
+      "parsed": {
+        "pred": 8,
+        "sections": {
+          "[Progress]": "History Actions: [1] — one short forward movement has been executed. Subtask 1 i...",
+          "[Observation]": "The dark gray water tower (target of subtask 1) is visible in the distance, ahea...",
+          "[Reasoning]": "The target for subtask 1 is ahead and distant. Since we are ascending toward it ...",
+          "[Decision]": "fast_forward"
+        },
+        "direction_hits": [
+          "ahead"
+        ],
+        "distance_hits": [
+          "closer",
+          "close",
+          "distant",
+          "far",
+          "mid-range"
+        ],
+        "decision_name": "fast_forward",
+        "alternative_lines_count": 1,
+        "alternative": {
+          "name": "ascend",
+          "id": 4,
+          "reason": "the target is ahead at a distant range, and forward movement is needed to approa"
+        }
+      }
+    },
+    {
+      "input_digest": "sample3_curr20250115_081115_modeC",
+      "sample_id": 3,
+      "target_action": 3,
+      "target_group": "turn_family",
+      "is_last_step": false,
+      "mode": "C",
+      "prompt_hash": "73f4d7f94e84",
+      "message_hash": "a70ca303ed50",
+      "ok": true,
+      "latency": 45.03,
+      "retry_count": 0,
+      "response_text": "<thinking>\n[Progress] History Actions: [1] — one short forward movement has been executed. The current observation shows the dark gray water tower (cylindrical base, conical top) in the distance, and the dark brown/black water tower with elevated cylindrical structure supported by legs is also visible. The large black modern commercial building is below. Subtask 1 is complete (ascended towards the dark gray water tower). Subtask 2 is active: proceed slightly straight, then turn right towards the dark brown/black water tower.\n\n[Observation] The dark brown/black water tower with elevated cylindrical structure supported by legs is to the right and at a distant range. The dark gray water tower is ahead and slightly to the left, also distant. The commercial building is below, indicating the drone is still elevated.\n\n[Reasoning] Subtask 2 requires proceeding slightly straight (from current heading) and then turning right toward the dark brown/black water tower. Since the target is to the right and distant, a right turn is needed to align heading toward it. The current heading is not yet aligned with the target, so turning right is the necessary next step. The target is distant, so a forward move now would be inefficient without proper heading alignment.\nAlternative considered: forward (1); Rejected because the target is to the right and distant; moving forward without turning would not progress toward the target efficiently.\n\n[Decision] turn_right\n</thinking>\n<next_action>3</next_action>",
+      "error": null,
+      "timestamp": "2026-04-15T17:36:02.912006",
+      "keep": true,
+      "fail_reasons": [],
+      "rule_results": {
+        "R1_xml_parse": true,
+        "R2_action_strict": true,
+        "R3_4_sections": true,
+        "R4_direction_word": true,
+        "R5_distance_word": true,
+        "R6_alternative_line": true,
+        "R7_decision_next_match": true
+      },
+      "parsed": {
+        "pred": 3,
+        "sections": {
+          "[Progress]": "History Actions: [1] — one short forward movement has been executed. The current...",
+          "[Observation]": "The dark brown/black water tower with elevated cylindrical structure supported b...",
+          "[Reasoning]": "Subtask 2 requires proceeding slightly straight (from current heading) and then ...",
+          "[Decision]": "turn_right"
+        },
+        "direction_hits": [
+          "right"
+        ],
+        "distance_hits": [
+          "distant"
+        ],
+        "decision_name": "turn_right",
+        "alternative_lines_count": 1,
+        "alternative": {
+          "name": "forward",
+          "id": 1,
+          "reason": "the target is to the right and distant; moving forward without turning would not"
+        }
+      }
+    },
+    {
+      "input_digest": "sample4_curr20250119_131939_18_modeA2",
+      "sample_id": 4,
+      "target_action": 4,
+      "target_group": "vertical_family",
+      "is_last_step": false,
+      "mode": "A2",
+      "prompt_hash": "15a0b53c981c",
+      "message_hash": "6a0760e30aeb",
+      "ok": true,
+      "latency": 35.55,
+      "retry_count": 0,
+      "response_text": "<thinking>\n[Progress] No history actions have been executed yet. The first subtask is active: \"Slightly ascend to the light gray wall with a large tiled pattern.\" The current observation shows a light gray modern building with a tiled façade and subtle texture adjacent to the beige skyscraper. This matches the description of the target for subtask 1.\n\n[Observation] The light gray wall with a large tiled pattern is visible to the right of the beige skyscraper, at close to mid-range distance. It is adjacent and clearly distinguishable from the beige building.\n\n[Reasoning] The target for subtask 1 is the light gray wall with a tiled pattern, which is currently visible to the right and at close range. Since the instruction is to \"slightly ascend\" to it, the most appropriate action is to move upward to align with its vertical plane. The target is not directly ahead, so a forward move would not be optimal.\nAlternative considered: forward (1); Rejected because the target is to the right, not directly ahead, and moving forward would not bring the drone closer to the tiled wall.\n\n[Decision] ascend\n</thinking>\n<next_action>4</next_action>",
+      "error": null,
+      "timestamp": "2026-04-15T17:36:38.461327",
+      "keep": true,
+      "fail_reasons": [],
+      "rule_results": {
+        "R1_xml_parse": true,
+        "R2_action_strict": true,
+        "R3_4_sections": true,
+        "R4_direction_word": true,
+        "R5_distance_word": true,
+        "R6_alternative_line": true,
+        "R7_decision_next_match": true
+      },
+      "parsed": {
+        "pred": 4,
+        "sections": {
+          "[Progress]": "No history actions have been executed yet. The first subtask is active: \"Slightl...",
+          "[Observation]": "The light gray wall with a large tiled pattern is visible to the right of the be...",
+          "[Reasoning]": "The target for subtask 1 is the light gray wall with a tiled pattern, which is c...",
+          "[Decision]": "ascend"
+        },
+        "direction_hits": [
+          "right",
+          "ahead"
+        ],
+        "distance_hits": [
+          "closer",
+          "close"
+        ],
+        "decision_name": "ascend",
+        "alternative_lines_count": 1,
+        "alternative": {
+          "name": "forward",
+          "id": 1,
+          "reason": "the target is to the right, not directly ahead, and moving forward would not bri"
+        }
+      }
+    },
+    {
+      "input_digest": "sample4_curr20250119_131939_18_modeC",
+      "sample_id": 4,
+      "target_action": 4,
+      "target_group": "vertical_family",
+      "is_last_step": false,
+      "mode": "C",
+      "prompt_hash": "15a0b53c981c",
+      "message_hash": "33b8caa4a6e2",
+      "ok": true,
+      "latency": 36.26,
+      "retry_count": 0,
+      "response_text": "<thinking>\n[Progress] No history actions have been executed yet. The first subtask is active: \"Slightly ascend to the light gray wall with a large tiled pattern.\" The current observation shows a light gray wall with a tiled pattern in the immediate foreground, suggesting we are already at or very near it.\n\n[Observation] The light gray wall with a large tiled pattern is directly below and in front, at very close range, forming the lower portion of the current view. The beige skyscraper is ahead and slightly to the right, at mid-range.\n\n[Reasoning] Since the light gray tiled wall is already visible in the foreground and the subtask is to \"slightly ascend to\" it, the drone must be positioned just below or at the same level as the wall. A slight upward movement is needed to align with the wall’s surface. The wall is directly below and close, so ascending is the correct next step.\nAlternative considered: forward (1); Rejected because the target wall is directly below and close, not ahead; moving forward would not align with the wall’s vertical plane.\n\n[Decision] ascend\n</thinking>\n<next_action>4</next_action>",
+      "error": null,
+      "timestamp": "2026-04-15T17:37:14.736083",
+      "keep": true,
+      "fail_reasons": [],
+      "rule_results": {
+        "R1_xml_parse": true,
+        "R2_action_strict": true,
+        "R3_4_sections": true,
+        "R4_direction_word": true,
+        "R5_distance_word": true,
+        "R6_alternative_line": true,
+        "R7_decision_next_match": true
+      },
+      "parsed": {
+        "pred": 4,
+        "sections": {
+          "[Progress]": "No history actions have been executed yet. The first subtask is active: \"Slightl...",
+          "[Observation]": "The light gray wall with a large tiled pattern is directly below and in front, a...",
+          "[Reasoning]": "Since the light gray tiled wall is already visible in the foreground and the sub...",
+          "[Decision]": "ascend"
+        },
+        "direction_hits": [
+          "ahead",
+          "below"
+        ],
+        "distance_hits": [
+          "close"
+        ],
+        "decision_name": "ascend",
+        "alternative_lines_count": 1,
+        "alternative": {
+          "name": "forward",
+          "id": 1,
+          "reason": "the target wall is directly below and close, not ahead; moving forward would not"
+        }
+      }
+    },
+    {
+      "input_digest": "sample5_curr20250119_072249_65_modeA2",
+      "sample_id": 5,
+      "target_action": 5,
+      "target_group": "vertical_family",
+      "is_last_step": false,
+      "mode": "A2",
+      "prompt_hash": "e0dd9458db18",
+      "message_hash": "f61932c8688c",
+      "ok": true,
+      "latency": 43.95,
+      "retry_count": 0,
+      "response_text": "<thinking>\n[Progress] The history actions include multiple forward, ascend, descend, and turn actions. The current observation shows a tall white building with a curved glass facade — which matches subtask 9's target. The instruction states to \"lower to a tall white building with a curved glass facade\" and then \"advance forward again to it.\" Since we are now at this building, subtask 9 is complete. The active subtask is subtask 10: \"Advance forward again to it.\"\n\n[Observation] The tall white building with a curved glass facade is directly ahead at close range. It is adjacent to a silver reflective glass building, and the drone is positioned near its base. The target for subtask 10 is to advance forward again to this same building — implying moving closer to it or along its front face.\n\n[Reasoning] Subtask 10 requires advancing forward again to the tall white building with a curved glass facade, which is already in front at close range. A short forward movement (forward, action 1) is appropriate to continue approaching it without overshooting. The building is directly ahead and close, so a long-range move would be excessive.\nAlternative considered: super_forward (9); Rejected because the target is already close ahead; super_forward (9) is a long-range ~9m step that would carry the drone too far past the intended position.\n\n[Decision] forward\n</thinking>\n<next_action>1</next_action>",
+      "error": null,
+      "timestamp": "2026-04-15T17:37:58.683142",
+      "keep": false,
+      "fail_reasons": [
+        "R2_action_strict_fail(pred=1,gt=5)"
+      ],
+      "rule_results": {
+        "R1_xml_parse": true,
+        "R2_action_strict": false,
+        "R3_4_sections": true,
+        "R4_direction_word": true,
+        "R5_distance_word": true,
+        "R6_alternative_line": true,
+        "R7_decision_next_match": true
+      },
+      "parsed": {
+        "pred": 1,
+        "sections": {
+          "[Progress]": "The history actions include multiple forward, ascend, descend, and turn actions....",
+          "[Observation]": "The tall white building with a curved glass facade is directly ahead at close ra...",
+          "[Reasoning]": "Subtask 10 requires advancing forward again to the tall white building with a cu...",
+          "[Decision]": "forward"
+        },
+        "direction_hits": [
+          "front",
+          "ahead"
+        ],
+        "distance_hits": [
+          "close",
+          "far",
+          "long-range"
+        ],
+        "decision_name": "forward",
+        "alternative_lines_count": 1,
+        "alternative": {
+          "name": "super_forward",
+          "id": 9,
+          "reason": "the target is already close ahead; super_forward (9) is a long-range ~9m step th"
+        }
+      }
+    },
+    {
+      "input_digest": "sample5_curr20250119_072249_65_modeC",
+      "sample_id": 5,
+      "target_action": 5,
+      "target_group": "vertical_family",
+      "is_last_step": false,
+      "mode": "C",
+      "prompt_hash": "e0dd9458db18",
+      "message_hash": "f47aef4ba69c",
+      "ok": true,
+      "latency": 41.94,
+      "retry_count": 0,
+      "response_text": "<thinking>\n[Progress] The history actions include multiple forward, ascend, descend, and turn actions, culminating in recent descents and turns that have brought the drone to the tall white building with a curved glass facade. The current observation confirms this building is now visible and adjacent to the silver reflective glass building, which was the target of subtask 8. Subtask 9 (\"Lower to a tall white building with a curved glass facade\") appears to be complete. The active subtask is subtask 10: \"Advance forward again to it\" — meaning, advance forward to the same tall white building with a curved glass facade.\n\n[Observation] The tall white building with a curved glass facade is directly ahead at close range, adjacent to the silver reflective building. The drone is already near it, and the instruction is to \"advance forward again to it\", implying a short forward movement to fully approach or align with it.\n\n[Reasoning] The target building is directly ahead at close range. Since the drone is already near it, a short-range forward move is appropriate to complete the approach. A longer move would risk overshooting. \nAlternative considered: super_forward (9); Rejected because the target is already close ahead; super_forward (9) is a long-range ~9m step that would carry past the target unnecessarily.\n\n[Decision] forward\n</thinking>\n<next_action>1</next_action>",
+      "error": null,
+      "timestamp": "2026-04-15T17:38:40.636720",
+      "keep": false,
+      "fail_reasons": [
+        "R2_action_strict_fail(pred=1,gt=5)"
+      ],
+      "rule_results": {
+        "R1_xml_parse": true,
+        "R2_action_strict": false,
+        "R3_4_sections": true,
+        "R4_direction_word": true,
+        "R5_distance_word": true,
+        "R6_alternative_line": true,
+        "R7_decision_next_match": true
+      },
+      "parsed": {
+        "pred": 1,
+        "sections": {
+          "[Progress]": "The history actions include multiple forward, ascend, descend, and turn actions,...",
+          "[Observation]": "The tall white building with a curved glass facade is directly ahead at close ra...",
+          "[Reasoning]": "The target building is directly ahead at close range. Since the drone is already...",
+          "[Decision]": "forward"
+        },
+        "direction_hits": [
+          "ahead"
+        ],
+        "distance_hits": [
+          "close",
+          "near",
+          "short-range",
+          "long-range"
+        ],
+        "decision_name": "forward",
+        "alternative_lines_count": 1,
+        "alternative": {
+          "name": "super_forward",
+          "id": 9,
+          "reason": "the target is already close ahead; super_forward (9) is a long-range ~9m step th"
+        }
+      }
+    },
+    {
+      "input_digest": "sample6_curr20250110_234843_7_modeA2",
+      "sample_id": 6,
+      "target_action": 8,
+      "target_group": "forward_family",
+      "is_last_step": false,
+      "mode": "A2",
+      "prompt_hash": "81979bdd54c6",
+      "message_hash": "c6528bc987a5",
+      "ok": true,
+      "latency": 44.21,
+      "retry_count": 0,
+      "response_text": "<thinking>\n[Progress] History actions [9, 9] indicate two long-range forward movements. The current observation confirms that the white tall glass skyscraper with vertical lines is now visible, adjacent to the silver/gray skyscraper with a curved façade and vertical lines. This matches the description of the target in subtask 1. Therefore, subtask 1 is complete. The active subtask is subtask 2: \"slightly turn right and proceed straight to the silver/gray skyscraper with a curved façade and vertical lines, towering and dominating the skyline.\"\n\n[Observation] The silver/gray skyscraper with a curved façade is to the right of the current heading and is visible at close to mid-range. The white skyscraper is to the left or center, indicating the drone has reached the first target and is now positioned to turn right toward the second.\n\n[Reasoning] Since subtask 2 requires a slight right turn before proceeding straight to the silver/gray skyscraper, the next logical action is to rotate right to align the heading toward the target. The target is to the right and at close to mid-range, so a heading adjustment is necessary before forward movement. \nAlternative considered: super_forward (9); Rejected because the target is to the right, not directly ahead, and proceeding straight without turning would miss the intended path.\n\n[Decision] turn_right\n</thinking>\n<next_action>3</next_action>",
+      "error": null,
+      "timestamp": "2026-04-15T17:39:24.849254",
+      "keep": false,
+      "fail_reasons": [
+        "R2_action_strict_fail(pred=3,gt=8)"
+      ],
+      "rule_results": {
+        "R1_xml_parse": true,
+        "R2_action_strict": false,
+        "R3_4_sections": true,
+        "R4_direction_word": true,
+        "R5_distance_word": true,
+        "R6_alternative_line": true,
+        "R7_decision_next_match": true
+      },
+      "parsed": {
+        "pred": 3,
+        "sections": {
+          "[Progress]": "History actions [9, 9] indicate two long-range forward movements. The current ob...",
+          "[Observation]": "The silver/gray skyscraper with a curved façade is to the right of the current h...",
+          "[Reasoning]": "Since subtask 2 requires a slight right turn before proceeding straight to the s...",
+          "[Decision]": "turn_right"
+        },
+        "direction_hits": [
+          "right",
+          "ahead"
+        ],
+        "distance_hits": [
+          "close",
+          "mid-range"
+        ],
+        "decision_name": "turn_right",
+        "alternative_lines_count": 1,
+        "alternative": {
+          "name": "super_forward",
+          "id": 9,
+          "reason": "the target is to the right, not directly ahead, and proceeding straight without "
+        }
+      }
+    },
+    {
+      "input_digest": "sample6_curr20250110_234843_7_modeC",
+      "sample_id": 6,
+      "target_action": 8,
+      "target_group": "forward_family",
+      "is_last_step": false,
+      "mode": "C",
+      "prompt_hash": "81979bdd54c6",
+      "message_hash": "03b1bef68684",
+      "ok": true,
+      "latency": 39.9,
+      "retry_count": 0,
+      "response_text": "<thinking>\n[Progress] History actions [9, 9] indicate two long-range forward movements. The current observation confirms the presence of the white tall glass skyscraper with vertical lines — this matches subtask 1. The silver/gray skyscraper with a curved façade is also visible adjacent to it, indicating we are now at the transition point between subtask 1 and subtask 2. Subtask 1 is complete. The active subtask is subtask 2: \"slightly turn right and proceed straight to the silver/gray skyscraper with a curved façade and vertical lines\".\n\n[Observation] The silver/gray skyscraper with a curved façade is to the right of the current heading, at close to mid-range distance. The white skyscraper is directly ahead or slightly to the left, now serving as a reference point.\n\n[Reasoning] Since subtask 2 requires a slight right turn to align with the silver/gray skyscraper, which is currently to the right and close, a turn right is necessary to adjust heading. The target is not far, so a rotation is more appropriate than forward movement. \nAlternative considered: super_forward (9); Rejected because the target is to the right, not directly ahead, and moving forward without turning would carry the drone past the target or away from it.\n\n[Decision] turn_right\n</thinking>\n<next_action>3</next_action>",
+      "error": null,
+      "timestamp": "2026-04-15T17:40:04.765869",
+      "keep": false,
+      "fail_reasons": [
+        "R2_action_strict_fail(pred=3,gt=8)"
+      ],
+      "rule_results": {
+        "R1_xml_parse": true,
+        "R2_action_strict": false,
+        "R3_4_sections": true,
+        "R4_direction_word": true,
+        "R5_distance_word": true,
+        "R6_alternative_line": true,
+        "R7_decision_next_match": true
+      },
+      "parsed": {
+        "pred": 3,
+        "sections": {
+          "[Progress]": "History actions [9, 9] indicate two long-range forward movements. The current ob...",
+          "[Observation]": "The silver/gray skyscraper with a curved façade is to the right of the current h...",
+          "[Reasoning]": "Since subtask 2 requires a slight right turn to align with the silver/gray skysc...",
+          "[Decision]": "turn_right"
+        },
+        "direction_hits": [
+          "right",
+          "ahead"
+        ],
+        "distance_hits": [
+          "close",
+          "far"
+        ],
+        "decision_name": "turn_right",
+        "alternative_lines_count": 1,
+        "alternative": {
+          "name": "super_forward",
+          "id": 9,
+          "reason": "the target is to the right, not directly ahead, and moving forward without turni"
+        }
+      }
+    },
+    {
+      "input_digest": "sample7_curr20250119_053359_14_modeA2",
+      "sample_id": 7,
+      "target_action": 8,
+      "target_group": "forward_family",
+      "is_last_step": false,
+      "mode": "A2",
+      "prompt_hash": "2bcbacaeddc0",
+      "message_hash": "70fbdb044690",
+      "ok": true,
+      "latency": 41.54,
+      "retry_count": 0,
+      "response_text": "<thinking>\n[Progress] History actions [9, 3, 3] indicate a long forward move followed by two right turns. Based on the current observation, the tall beige vertical building with windows is now prominently in the foreground — matching subtask 3. The medium-sized green and white structure with arched details is adjacent, confirming we have reached the target of subtask 2. Therefore, subtasks 1, 2, and 3 are complete. The active subtask is subtask 4: \"Proceed straight ahead to another light beige tall and modern skyscraper with numerous windows.\"\n\n[Observation] The target for subtask 4 — a light beige tall and modern skyscraper with numerous windows — is visible in the background, further ahead, beyond the current foreground building. It is located ahead and slightly to the right, at a distant range.\n\n[Reasoning] The current heading is aligned with the direction toward the next skyscraper, which is ahead and distant. To progress toward it efficiently, a long-range forward move is appropriate. The target is not close enough for a short-range step, and turning would misalign the heading.\nAlternative considered: turn_right (3); Rejected because the target is ahead and slightly to the right, not directly to the right; turning right would overshoot the intended path.\n\n[Decision] super_forward\n</thinking>\n<next_action>9</next_action>",
+      "error": null,
+      "timestamp": "2026-04-15T17:40:46.307766",
+      "keep": false,
+      "fail_reasons": [
+        "R2_action_strict_fail(pred=9,gt=8)"
+      ],
+      "rule_results": {
+        "R1_xml_parse": true,
+        "R2_action_strict": false,
+        "R3_4_sections": true,
+        "R4_direction_word": true,
+        "R5_distance_word": true,
+        "R6_alternative_line": true,
+        "R7_decision_next_match": true
+      },
+      "parsed": {
+        "pred": 9,
+        "sections": {
+          "[Progress]": "History actions [9, 3, 3] indicate a long forward move followed by two right tur...",
+          "[Observation]": "The target for subtask 4 — a light beige tall and modern skyscraper with numerou...",
+          "[Reasoning]": "The current heading is aligned with the direction toward the next skyscraper, wh...",
+          "[Decision]": "super_forward"
+        },
+        "direction_hits": [
+          "right",
+          "ahead"
+        ],
+        "distance_hits": [
+          "close",
+          "distant",
+          "short-range",
+          "long-range"
+        ],
+        "decision_name": "super_forward",
+        "alternative_lines_count": 1,
+        "alternative": {
+          "name": "turn_right",
+          "id": 3,
+          "reason": "the target is ahead and slightly to the right, not directly to the right; turnin"
+        }
+      }
+    },
+    {
+      "input_digest": "sample7_curr20250119_053359_14_modeC",
+      "sample_id": 7,
+      "target_action": 8,
+      "target_group": "forward_family",
+      "is_last_step": false,
+      "mode": "C",
+      "prompt_hash": "2bcbacaeddc0",
+      "message_hash": "81e48ed990d0",
+      "ok": true,
+      "latency": 37.28,
+      "retry_count": 0,
+      "response_text": "<thinking>\n[Progress] History actions [9, 3, 3] indicate a long forward move followed by two right turns. The current observation shows a tall, beige vertical building with windows in the foreground — matching subtask 3's target. The medium-sized green and white structure is adjacent, and the large beige residential high-rise is visible further back. This suggests subtask 3 is complete. The active subtask is subtask 4: \"Proceed straight ahead to another light beige tall and modern skyscraper with numerous windows.\"\n\n[Observation] The target skyscraper for subtask 4 is ahead and slightly to the right, at mid-range distance. It is a light beige tall building with numerous windows, visible among other structures in the background. The current heading is aligned toward it.\n\n[Reasoning] The target skyscraper is ahead at mid-range, so a mid-range forward move is appropriate to approach it. The current heading is already oriented toward the target, so no rotation is needed. \nAlternative considered: super_forward (9); Rejected because the target is at mid-range, not long-range, and super_forward would overshoot the target.\n\n[Decision] fast_forward\n</thinking>\n<next_action>8</next_action>",
+      "error": null,
+      "timestamp": "2026-04-15T17:41:23.625002",
+      "keep": true,
+      "fail_reasons": [],
+      "rule_results": {
+        "R1_xml_parse": true,
+        "R2_action_strict": true,
+        "R3_4_sections": true,
+        "R4_direction_word": true,
+        "R5_distance_word": true,
+        "R6_alternative_line": true,
+        "R7_decision_next_match": true
+      },
+      "parsed": {
+        "pred": 8,
+        "sections": {
+          "[Progress]": "History actions [9, 3, 3] indicate a long forward move followed by two right tur...",
+          "[Observation]": "The target skyscraper for subtask 4 is ahead and slightly to the right, at mid-r...",
+          "[Reasoning]": "The target skyscraper is ahead at mid-range, so a mid-range forward move is appr...",
+          "[Decision]": "fast_forward"
+        },
+        "direction_hits": [
+          "ahead"
+        ],
+        "distance_hits": [
+          "long-range",
+          "mid-range"
+        ],
+        "decision_name": "fast_forward",
+        "alternative_lines_count": 1,
+        "alternative": {
+          "name": "super_forward",
+          "id": 9,
+          "reason": "the target is at mid-range, not long-range, and super_forward would overshoot th"
+        }
+      }
+    },
+    {
+      "input_digest": "sample8_curr20250109_213718_16_modeA2",
+      "sample_id": 8,
+      "target_action": 9,
+      "target_group": "forward_family",
+      "is_last_step": false,
+      "mode": "A2",
+      "prompt_hash": "dd118c08ff0f",
+      "message_hash": "7d3eba570bbe",
+      "ok": true,
+      "latency": 32.23,
+      "retry_count": 0,
+      "response_text": "<thinking>\n[Progress] The history actions [8, 2, 9, 9, 9, 1, 3] indicate a sequence of forward movements and turns. The current observation confirms that the final target — the large, brown building with a light blue roof structure and distinctive stepped architecture — is now visible. This matches the description of subtask 3. Since all three subtasks are now satisfied by the current observation, the task is complete.\n\n[Observation] The target building is directly ahead at close range. It is clearly visible and centered in the view, with the other two buildings (tall brown with setbacks and large white with vertical windows) adjacent, confirming we have reached the final destination.\n\n[Reasoning] The goal has been reached — the target building is in front at close range. No further movement is required. The task is complete.\nAlternative considered: forward (1); Rejected because the target is already close in front; forward (1) would move past the goal unnecessarily.\n\n[Decision] stop\n</thinking>\n<next_action>0</next_action>",
+      "error": null,
+      "timestamp": "2026-04-15T17:41:55.858960",
+      "keep": false,
+      "fail_reasons": [
+        "R2_action_strict_fail(pred=0,gt=9)"
+      ],
+      "rule_results": {
+        "R1_xml_parse": true,
+        "R2_action_strict": false,
+        "R3_4_sections": true,
+        "R4_direction_word": true,
+        "R5_distance_word": true,
+        "R6_alternative_line": true,
+        "R7_decision_next_match": true
+      },
+      "parsed": {
+        "pred": 0,
+        "sections": {
+          "[Progress]": "The history actions [8, 2, 9, 9, 9, 1, 3] indicate a sequence of forward movemen...",
+          "[Observation]": "The target building is directly ahead at close range. It is clearly visible and ...",
+          "[Reasoning]": "The goal has been reached — the target building is in front at close range. No f...",
+          "[Decision]": "stop"
+        },
+        "direction_hits": [
+          "front"
+        ],
+        "distance_hits": [
+          "close",
+          "further"
+        ],
+        "decision_name": "stop",
+        "alternative_lines_count": 1,
+        "alternative": {
+          "name": "forward",
+          "id": 1,
+          "reason": "the target is already close in front; forward (1) would move past the goal unnec"
+        }
+      }
+    },
+    {
+      "input_digest": "sample8_curr20250109_213718_16_modeC",
+      "sample_id": 8,
+      "target_action": 9,
+      "target_group": "forward_family",
+      "is_last_step": false,
+      "mode": "C",
+      "prompt_hash": "dd118c08ff0f",
+      "message_hash": "a51145a6f08b",
+      "ok": true,
+      "latency": 37.18,
+      "retry_count": 0,
+      "response_text": "<thinking>\n[Progress] The history actions [8, 2, 9, 9, 9, 1, 3] indicate a sequence of forward movements and turns. The current observation confirms that the final target — the large, brown building with a light blue roof structure and a distinctive stepped architecture, adorned with a light blue decorative element on top — is now visible. This matches subtask 3’s description. Since the target is in view and the instruction sequence has been followed, subtask 3 is complete. All subtasks are now done.\n\n[Observation] The target building is directly ahead at close range. It is centered in the view, with its light blue roof and decorative element clearly visible. The tall brown building with stepped setbacks is to the left, and the large white building with vertical windows is nearby, confirming we have reached the final destination.\n\n[Reasoning] The task is complete as the final target building is directly ahead and in close proximity. No further movement is required. The drone should stop to mark task completion.\nAlternative considered: forward (1); Rejected because the target is already close in front; forward (1) would move past the goal unnecessarily.\n\n[Decision] stop\n</thinking>\n<next_action>0</next_action>",
+      "error": null,
+      "timestamp": "2026-04-15T17:42:33.038760",
+      "keep": false,
+      "fail_reasons": [
+        "R2_action_strict_fail(pred=0,gt=9)"
+      ],
+      "rule_results": {
+        "R1_xml_parse": true,
+        "R2_action_strict": false,
+        "R3_4_sections": true,
+        "R4_direction_word": true,
+        "R5_distance_word": true,
+        "R6_alternative_line": true,
+        "R7_decision_next_match": true
+      },
+      "parsed": {
+        "pred": 0,
+        "sections": {
+          "[Progress]": "The history actions [8, 2, 9, 9, 9, 1, 3] indicate a sequence of forward movemen...",
+          "[Observation]": "The target building is directly ahead at close range. It is centered in the view...",
+          "[Reasoning]": "The task is complete as the final target building is directly ahead and in close...",
+          "[Decision]": "stop"
+        },
+        "direction_hits": [
+          "front",
+          "ahead"
+        ],
+        "distance_hits": [
+          "close",
+          "further"
+        ],
+        "decision_name": "stop",
+        "alternative_lines_count": 1,
+        "alternative": {
+          "name": "forward",
+          "id": 1,
+          "reason": "the target is already close in front; forward (1) would move past the goal unnec"
+        }
+      }
+    },
+    {
+      "input_digest": "sample9_curr20250119_064304_16_modeA2",
+      "sample_id": 9,
+      "target_action": 9,
+      "target_group": "forward_family",
+      "is_last_step": false,
+      "mode": "A2",
+      "prompt_hash": "995ffba428b9",
+      "message_hash": "44016d685c85",
+      "ok": true,
+      "latency": 38.47,
+      "retry_count": 0,
+      "response_text": "<thinking>\n[Progress] The history actions [9, 9, 9, 9] indicate four long-range forward movements, totaling approximately 36 meters. The current observation shows the dark skyscraper with illuminated grid-like patterns, which matches the final target described in subtask 6. All prior subtasks (1 through 5) have been completed, as we are now directly facing the final destination. The active subtask is subtask 6: \"Descend to the dark skyscraper featuring illuminated grid-like patterns and stop.\"\n\n[Observation] The target skyscraper is directly ahead at close range, clearly visible with its illuminated grid-like patterns. It is centered in the field of view, indicating alignment with the current heading. The distance is close, requiring only a descent to reach the final stopping point.\n\n[Reasoning] The target is directly ahead and close, so no further forward or turning motion is needed. The next required action is to descend to it, as per subtask 6. The target is close in front, so descending is the appropriate next step.\nAlternative considered: forward (1); Rejected because the target is already close in front; forward (1) would move past the goal unnecessarily.\n\n[Decision] descend\n</thinking>\n<next_action>5</next_action>",
+      "error": null,
+      "timestamp": "2026-04-15T17:43:11.510712",
+      "keep": false,
+      "fail_reasons": [
+        "R2_action_strict_fail(pred=5,gt=9)"
+      ],
+      "rule_results": {
+        "R1_xml_parse": true,
+        "R2_action_strict": false,
+        "R3_4_sections": true,
+        "R4_direction_word": true,
+        "R5_distance_word": true,
+        "R6_alternative_line": true,
+        "R7_decision_next_match": true
+      },
+      "parsed": {
+        "pred": 5,
+        "sections": {
+          "[Progress]": "The history actions [9, 9, 9, 9] indicate four long-range forward movements, tot...",
+          "[Observation]": "The target skyscraper is directly ahead at close range, clearly visible with its...",
+          "[Reasoning]": "The target is directly ahead and close, so no further forward or turning motion ...",
+          "[Decision]": "descend"
+        },
+        "direction_hits": [
+          "front",
+          "ahead"
+        ],
+        "distance_hits": [
+          "close",
+          "further"
+        ],
+        "decision_name": "descend",
+        "alternative_lines_count": 1,
+        "alternative": {
+          "name": "forward",
+          "id": 1,
+          "reason": "the target is already close in front; forward (1) would move past the goal unnec"
+        }
+      }
+    },
+    {
+      "input_digest": "sample9_curr20250119_064304_16_modeC",
+      "sample_id": 9,
+      "target_action": 9,
+      "target_group": "forward_family",
+      "is_last_step": false,
+      "mode": "C",
+      "prompt_hash": "995ffba428b9",
+      "message_hash": "0e700054602e",
+      "ok": true,
+      "latency": 45.87,
+      "retry_count": 0,
+      "response_text": "<thinking>\n[Progress] History actions [9, 9, 9, 9] indicate four long-range forward movements, totaling ~36 meters. The current observation shows the dark skyscraper with illuminated grid-like patterns, which matches the final target described in subtask 6. All prior subtasks (1 through 5) have been completed, as the drone has navigated through the multicolored building, the dark building with windows, and executed the required turns and ascents. The active subtask is subtask 6: \"Descend to the dark skyscraper featuring illuminated grid-like patterns and stop.\"\n\n[Observation] The target skyscraper with illuminated grid-like patterns is directly ahead at close range. It is centered in the view, with its facade clearly visible, indicating proximity. The drone is currently at or near the target building.\n\n[Reasoning] Subtask 6 requires descending to the target and stopping. Since the target is directly ahead and close, the next logical action is to descend to reach the final position. The drone is already aligned with the target, so no heading adjustment is needed.\nAlternative considered: forward (1); Rejected because the target is already close ahead; forward (1) would move the drone further away from the intended stopping point.\n\n[Decision] descend\n</thinking>\n<next_action>5</next_action>",
+      "error": null,
+      "timestamp": "2026-04-15T17:43:57.396623",
+      "keep": false,
+      "fail_reasons": [
+        "R2_action_strict_fail(pred=5,gt=9)"
+      ],
+      "rule_results": {
+        "R1_xml_parse": true,
+        "R2_action_strict": false,
+        "R3_4_sections": true,
+        "R4_direction_word": true,
+        "R5_distance_word": true,
+        "R6_alternative_line": true,
+        "R7_decision_next_match": true
+      },
+      "parsed": {
+        "pred": 5,
+        "sections": {
+          "[Progress]": "History actions [9, 9, 9, 9] indicate four long-range forward movements, totalin...",
+          "[Observation]": "The target skyscraper with illuminated grid-like patterns is directly ahead at c...",
+          "[Reasoning]": "Subtask 6 requires descending to the target and stopping. Since the target is di...",
+          "[Decision]": "descend"
+        },
+        "direction_hits": [
+          "ahead"
+        ],
+        "distance_hits": [
+          "close",
+          "further"
+        ],
+        "decision_name": "descend",
+        "alternative_lines_count": 1,
+        "alternative": {
+          "name": "forward",
+          "id": 1,
+          "reason": "the target is already close ahead; forward (1) would move the drone further away"
+        }
+      }
+    }
+  ]
+}

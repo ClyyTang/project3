@@ -118,54 +118,222 @@ class Stage2Trainer:
     
     @staticmethod
     def _parse_generated_cot(generated_text: str) -> tuple:
-        """从生成的文本中提取 thinking 和 action"""
         import re
-        
+
+        if generated_text is None:
+            return "", None
+
+        text = str(generated_text)
+        if "[/INST]" in text:
+            text = text.split("[/INST]", 1)[-1]
+
         thinking_text = ""
-        action_number = None
-        
-        thinking_match = re.search(r'<thinking>(.*?)</thinking>', generated_text, re.DOTALL)
-        if thinking_match:
-            thinking_text = thinking_match.group(1).strip()
-        
-        action_match = re.search(r'<action>(\d+)</action>', generated_text)
-        if action_match:
-            action_number = int(action_match.group(1))
+        m = re.search(r"<thinking>\s*(.*?)\s*</thinking>", text, re.IGNORECASE | re.DOTALL)
+        if m:
+            thinking_text = m.group(1).strip()
         else:
-            action_match = re.search(r'<next_action>(\d+)</next_action>', generated_text)
-            if action_match:
-                action_number = int(action_match.group(1))
-        
+            m2 = re.search(r"<thinking>\s*(.*)", text, re.IGNORECASE | re.DOTALL)
+            if m2:
+                thinking_text = m2.group(1).strip()
+            else:
+                thinking_text = text.strip()
+
+        thinking_text = re.sub(r"</?thinking>", "", thinking_text, flags=re.IGNORECASE).strip()
+        thinking_text = re.sub(
+            r"<(?:next_action|action)>\s*.*?\s*</(?:next_action|action)>",
+            "",
+            thinking_text,
+            flags=re.IGNORECASE | re.DOTALL
+        ).strip()
+
+        action_number = None
+        patterns = [
+            r"<action>\s*(-?\d+)\s*</action>",
+            r"<next_action>\s*(-?\d+)\s*</next_action>",
+            r"\bnext[_\s-]*action\s*[:=]\s*(-?\d+)\b",
+            r"\baction\s*[:=]\s*(-?\d+)\b",
+        ]
+        for ptn in patterns:
+            am = re.search(ptn, text, re.IGNORECASE)
+            if am:
+                try:
+                    v = int(am.group(1))
+                    action_number = v if 0 <= v <= 9 else None
+                except Exception:
+                    action_number = None
+                break
+
         return thinking_text, action_number
-    
+
     @staticmethod
     def _extract_ground_truth(sample: Dict, frame_idx: str) -> Dict:
-        """从sample中提取Ground Truth的CoT和actions"""
+        import re
+
+        def _norm(x):
+            return str(x).strip()
+
+        def _to_int(x):
+            try:
+                return int(str(x).strip())
+            except Exception:
+                return None
+
         gt_cot = ""
         gt_actions = []
-        
-        cot_dict = sample.get('cot', {})
-        index_list = sample.get('index_list', [])
-        action_list = sample.get('action', [])
-        
-        try:
-            current_idx = index_list.index(frame_idx)
-        except (ValueError, AttributeError):
-            return {'cot': gt_cot, 'actions': gt_actions}
-        
-        if current_idx < len(index_list) - 1:
-            next_frame = index_list[current_idx + 1]
-            cot_key = f"{frame_idx}-{next_frame}"
-            
-            if cot_key in cot_dict:
-                cot_text = cot_dict[cot_key]
-                gt_cot, _ = Stage2Trainer._parse_generated_cot(cot_text)
-        
-        if current_idx < len(action_list):
-            gt_actions = action_list[current_idx:current_idx + 10]
-        
-        return {'cot': gt_cot, 'actions': gt_actions}
-    
+
+        index_list_raw = (
+            sample.get("index_list")
+            or sample.get("frame_index_list")
+            or sample.get("frame_indices")
+            or []
+        )
+        if not isinstance(index_list_raw, list):
+            index_list_raw = list(index_list_raw) if index_list_raw else []
+
+        index_list = [_norm(x) for x in index_list_raw]
+        cur = _norm(frame_idx)
+
+        current_idx = None
+        if cur in index_list:
+            current_idx = index_list.index(cur)
+        else:
+            cur_i = _to_int(cur)
+            if cur_i is not None:
+                for i, v in enumerate(index_list):
+                    if _to_int(v) == cur_i:
+                        current_idx = i
+                        break
+
+        if current_idx is None:
+            return {"cot": "", "actions": []}
+
+        cot_dict = (
+            sample.get("cot")
+            or sample.get("cot_dict")
+            or sample.get("cot_map")
+            or sample.get("cot_pairs")
+            or {}
+        )
+        if not isinstance(cot_dict, dict):
+            cot_dict = {}
+
+        raw_cot = None
+        if cot_dict and current_idx < len(index_list) - 1:
+            nxt = index_list[current_idx + 1]
+            cur_i = _to_int(cur)
+            nxt_i = _to_int(nxt)
+
+            key_candidates = [
+                f"{cur}-{nxt}",
+                f"{cur}_{nxt}",
+                f"{cur},{nxt}",
+                f"{cur}->{nxt}",
+                f"{cur} {nxt}",
+            ]
+            if cur_i is not None and nxt_i is not None:
+                key_candidates.extend([
+                    f"{cur_i}-{nxt_i}",
+                    f"{cur_i}_{nxt_i}",
+                    f"{cur_i},{nxt_i}",
+                    f"{cur_i}->{nxt_i}",
+                    f"{cur_i} {nxt_i}",
+                ])
+
+            norm_key_map = {_norm(k): k for k in cot_dict.keys()}
+
+            for k in key_candidates:
+                if k in cot_dict:
+                    raw_cot = cot_dict[k]
+                    break
+                nk = _norm(k)
+                if nk in norm_key_map:
+                    raw_cot = cot_dict[norm_key_map[nk]]
+                    break
+
+            if raw_cot is None:
+                for k, v in cot_dict.items():
+                    ks = _norm(k)
+                    if cur in ks and nxt in ks:
+                        raw_cot = v
+                        break
+
+            if raw_cot is None and cur_i is not None and nxt_i is not None:
+                for k, v in cot_dict.items():
+                    nums = [int(x) for x in re.findall(r"-?\d+", _norm(k))]
+                    if len(nums) >= 2 and nums[0] == cur_i and nums[1] == nxt_i:
+                        raw_cot = v
+                        break
+
+        if isinstance(raw_cot, dict):
+            raw_cot = (
+                raw_cot.get("cot")
+                or raw_cot.get("thinking")
+                or raw_cot.get("text")
+                or raw_cot.get("output")
+                or ""
+            )
+        elif isinstance(raw_cot, list):
+            raw_cot = " ".join(str(x) for x in raw_cot if x is not None)
+        elif raw_cot is None:
+            raw_cot = ""
+
+        gt_cot, _ = Stage2Trainer._parse_generated_cot(raw_cot)
+        if not gt_cot:
+            txt2 = str(raw_cot).strip()
+            txt2 = re.sub(r"</?thinking>", "", txt2, flags=re.IGNORECASE)
+            txt2 = re.sub(r"</?action>", "", txt2, flags=re.IGNORECASE)
+            txt2 = re.sub(r"</?next_action>", "", txt2, flags=re.IGNORECASE)
+            gt_cot = txt2.strip()
+
+        action_src = sample.get("action")
+        if action_src is None:
+            action_src = sample.get("actions")
+        if action_src is None:
+            action_src = sample.get("action_list")
+
+        if isinstance(action_src, list):
+            if len(action_src) > 0 and isinstance(action_src[0], dict):
+                rows = []
+                for row in action_src:
+                    if not isinstance(row, dict):
+                        continue
+                    f = row.get("frame_idx", row.get("frame_id", row.get("idx", row.get("index"))))
+                    a = row.get("action", row.get("action_id", row.get("next_action")))
+                    fi = _to_int(f)
+                    ai = _to_int(a)
+                    if fi is not None and ai is not None:
+                        rows.append((fi, ai))
+                rows.sort(key=lambda x: x[0])
+
+                cur_i = _to_int(cur)
+                if cur_i is not None:
+                    gt_actions = [a for fi, a in rows if fi >= cur_i][:10]
+            else:
+                start = min(current_idx, len(action_src))
+                for a in action_src[start:start + 10]:
+                    ai = _to_int(a)
+                    if ai is not None:
+                        gt_actions.append(ai)
+
+        elif isinstance(action_src, dict):
+            items = []
+            for k, v in action_src.items():
+                fi = _to_int(k)
+                if isinstance(v, dict):
+                    v = v.get("action", v.get("action_id"))
+                ai = _to_int(v)
+                if fi is not None and ai is not None:
+                    items.append((fi, ai))
+            items.sort(key=lambda x: x[0])
+
+            cur_i = _to_int(cur)
+            if cur_i is None:
+                gt_actions = [a for _, a in items[:10]]
+            else:
+                gt_actions = [a for fi, a in items if fi >= cur_i][:10]
+
+        return {"cot": gt_cot, "actions": gt_actions}
+
     def _rank_candidates_with_scorer(
         self,
         candidates: List[Dict],
@@ -185,7 +353,8 @@ class Stage2Trainer:
         # 2. 转换候选格式
         formatted_candidates = []
         for cand in candidates:
-            thinking, action = self._parse_generated_cot(cand.get('generated_only', ''))
+            raw_text = (cand.get('generated_only') or cand.get('generated_text') or '').strip()
+            thinking, action = self._parse_generated_cot(raw_text)
             
             formatted_candidates.append({
                 'cot': thinking,
@@ -355,62 +524,58 @@ class Stage2Trainer:
         print(f"\n{'='*60}")
         print("加载训练数据")
         print(f"{'='*60}")
-        
+
         data_path = Path(self.config.data_path)
         print(f"加载数据: {data_path}")
-        
+
         with open(data_path, 'r') as f:
             train_data = json.load(f)
-        
-        print(f"  ✓ 加载了 {len(train_data)} 个样本")
-        
-        aux_labels_path = Path(self.config.get_aux_labels_path(round_num))
-        
-        aux_labels_dict = {}
-        if aux_labels_path.exists():
-            print(f"加载辅助标签: {aux_labels_path}")
-            
-            with open(aux_labels_path, 'r') as f:
-                aux_labels_list = json.load(f)
-            
-            for item in aux_labels_list:
-                sample_id = str(item.get('sample_id') or item.get('frame_idx'))  # ⭐ 统一转 str
-   
-                aux_labels_dict[sample_id] = item.get('aux_labels')
-            
-            print(f"  ✓ 加载了 {len(aux_labels_dict)} 个样本的辅助标签")
-        else:
-            print(f"  ⚠️  未找到辅助标签文件: {aux_labels_path}")
-            print(f"      将只使用GSPO loss训练")
-        
-        dataset = []
-        samples_with_labels = 0
-        
 
-        for idx, sample in enumerate(train_data):
-            sample_id = str(idx)  # ⭐ 用索引号匹配
-    
-            if sample_id in aux_labels_dict:
-                sample['aux_labels'] = aux_labels_dict[sample_id]
-                samples_with_labels += 1
+        print(f"  ✓ 加载了 {len(train_data)} 个样本")
+
+        aux_labels_dict = {}
+        if round_num == 0:
+            print("  Round 0: no aux_labels by design")
+        else:
+            aux_labels_path = Path(self.config.get_aux_labels_path(round_num))
+            if aux_labels_path.exists():
+                print(f"加载辅助标签: {aux_labels_path}")
+                with open(aux_labels_path, 'r') as f:
+                    aux_payload = json.load(f)
+
+                aux_labels_list = aux_payload if isinstance(aux_payload, list) else aux_payload.get('samples', [])
+                for item in aux_labels_list:
+                    sample_id = str(item.get('sample_id') if item.get('sample_id') is not None else item.get('sample_idx', ''))
+                    if sample_id and item.get('aux_labels') is not None:
+                        aux_labels_dict[sample_id] = item.get('aux_labels')
+
+                print(f"  ✓ 加载了 {len(aux_labels_dict)} 个样本的辅助标签")
             else:
-                sample['aux_labels'] = None
-            
+                print(f"  ⚠️  未找到辅助标签文件: {aux_labels_path}")
+                print("      将只使用GSPO loss训练")
+
+        dataset = []
+        for idx, sample in enumerate(train_data):
+            sample = dict(sample)
+            sample_id = str(idx)
+            sample['aux_labels'] = aux_labels_dict.get(sample_id)
             dataset.append(sample)
-        
+
         if self.args.test:
             original_size = len(dataset)
             dataset = dataset[:10]
             print(f"\n⚠️  测试模式：数据集从 {original_size} 减少到 {len(dataset)} 个样本")
-        
+
+        samples_with_labels = sum(1 for s in dataset if s.get('aux_labels') is not None)
+
         print(f"\n数据统计:")
         print(f"  总样本数: {len(dataset)}")
         print(f"  有辅助标签: {samples_with_labels}")
         print(f"  无辅助标签: {len(dataset) - samples_with_labels}")
         print(f"{'='*60}\n")
-        
+
         return dataset
-    
+
     def initialize_components(self) -> Dict:
         """初始化所有训练组件"""
         print(f"\n{'='*60}")
@@ -428,6 +593,36 @@ class Stage2Trainer:
         )
         multitask_vla = multitask_vla.to(self.device)
         
+        # codex_mem_guard
+
+        # codex_force_trainable_only
+        keep_keys = ("lora", "projector", "risk_head", "quality_head", "validity_head", "aux_head", "aux_")
+        total_n, train_n = 0, 0
+        for name, param in multitask_vla.named_parameters():
+            total_n += param.numel()
+            lname = name.lower()
+            trainable = any(k in lname for k in keep_keys)
+            param.requires_grad = trainable
+            if trainable:
+                if param.dtype != torch.float32:
+                    param.data = param.data.float()
+                train_n += param.numel()
+            else:
+                if param.dtype != torch.bfloat16:
+                    param.data = param.data.to(torch.bfloat16)
+        print(f"[dtype_guard] trainable params: {train_n/1e6:.2f}M / {total_n/1e6:.2f}M")
+
+        try:
+            multitask_vla.config.use_cache = False
+        except Exception:
+            pass
+        try:
+            if hasattr(multitask_vla, "llm_backbone") and hasattr(multitask_vla.llm_backbone, "llm"):
+                multitask_vla.llm_backbone.llm.config.use_cache = False
+                multitask_vla.llm_backbone.llm.gradient_checkpointing_enable()
+        except Exception:
+            pass
+
         print("\n[2/6] 初始化DynamicLoss...")
         dynamic_loss = DynamicLoss(
             lambda_keyword=0.15,
@@ -553,7 +748,7 @@ class Stage2Trainer:
                             (tr_img[k], tr_img[k], tr_img[k]), 
                             dim=0
                         )
-                        temp_pixel_values[k] = combined.unsqueeze(0).to(self.device)
+                        temp_pixel_values[k] = combined.unsqueeze(0).to(self.device, dtype=torch.bfloat16)
                     
                     pixel_values = temp_pixel_values
                     
@@ -572,7 +767,7 @@ class Stage2Trainer:
 
 
         candidates = []
-        temperatures = [0.7, 1.0, 1.5][:num_candidates]
+        temperatures = [0.7, 1.0][:num_candidates]
         
         prompt_ids = tokenizer(prompt_text, truncation=True, return_tensors="pt").input_ids.to(self.device)
         vocab_size = tokenizer.vocab_size  # ⭐ 提前获取词表大小
@@ -966,7 +1161,7 @@ class Stage2Trainer:
                     pixel_values = {}
                     for k in tr_img.keys():
                         combined = torch.cat((tr_img[k], tr_img[k], tr_img[k]), dim=0)
-                        pixel_values[k] = combined.unsqueeze(0).to(self.device)
+                        pixel_values[k] = combined.unsqueeze(0).to(self.device, dtype=torch.bfloat16)
                     
                     # 构建完整的 pair
                     complete_pair = {
@@ -993,6 +1188,15 @@ class Stage2Trainer:
             if len(pairs) == 0:
                 raise RuntimeError("❌ 没有有效的训练数据！请检查图片路径")
             
+            # candidate_dtype_fix_v1
+            vla.train()
+            for name, param in vla.named_parameters():
+                if param.requires_grad:
+                    if param.dtype != torch.float32:
+                        param.data = param.data.float()
+                else:
+                    if param.dtype != torch.bfloat16:
+                        param.data = param.data.to(torch.bfloat16)
             return pairs
 
     
@@ -1083,6 +1287,8 @@ class Stage2Trainer:
             return pairs
         
         vla.eval()
+        # candidate_dtype_fix_v1
+        vla.float()  # 推理统一fp32，避免 float/bf16 冲突
         
         for i in tqdm(range(start_idx, len(dataset)), desc="生成候选", initial=start_idx, total=len(dataset)):
             sample = dataset[i]
@@ -1115,7 +1321,7 @@ class Stage2Trainer:
                             pixel_values_for_pair = {}
                             for k in tr_img.keys():
                                 combined = torch.cat((tr_img[k], tr_img[k], tr_img[k]), dim=0)
-                                pixel_values_for_pair[k] = combined.unsqueeze(0).to(self.device)
+                                pixel_values_for_pair[k] = combined.unsqueeze(0).to(self.device, dtype=torch.bfloat16)
                     
                     except Exception as img_e:
                         if i < 5:
@@ -1249,6 +1455,15 @@ class Stage2Trainer:
             """训练一轮"""
             print(f"\n{'='*60}")
             print(f"Round {round_num}: GSPO训练")
+
+            # aux_auto_fill_hook_v1
+            if round_num >= 1:
+                try:
+                    import subprocess, sys, os
+                    hook = os.path.join(os.path.dirname(__file__), "auto_fill_aux_labels.py")
+                    subprocess.run([sys.executable, hook, "--round", str(round_num)], check=True)
+                except Exception as e:
+                    print(f"  ⚠️ aux auto-fill hook 失败: {e}")
             print(f"{'='*60}")
 
             # ⭐ 安全注入：确保 aux_labels 不因断点恢复而丢失
@@ -1373,48 +1588,57 @@ class Stage2Trainer:
     def run(self):
         """运行完整训练流程"""
         start_time = datetime.now()
-        
-        dataset = self.load_data(round_num=round_num)
         components = self.initialize_components()
-        
-        for round_num in range(1,self.config.num_rounds):
 
-                # ⭐ 新增：如果该轮已完成，跳过
+        for round_num in range(self.config.num_rounds):
+            dataset = self.load_data(round_num=round_num)
+
             final_ckpt = self.save_dir / f"round_{round_num}_final" / "adapter_model.safetensors"
-            if final_ckpt.exists() and round_num < self.config.num_rounds - 1:
+            if final_ckpt.exists() and (not self.args.test):
                 print(f"\n⏭️ Round {round_num} 已完成，跳过")
                 continue
-
 
             print(f"\n{'#'*60}")
             print(f"# Round {round_num + 1}/{self.config.num_rounds}")
             print(f"{'#'*60}")
-            
+
             if round_num == 0 or not self.args.reuse_candidates:
-                pairs = self.generate_candidates_for_round(
-                    components,
-                    dataset,
-                    round_num
-                )
+                pairs = self.generate_candidates_for_round(components, dataset, round_num)
             else:
-                print(f"\n复用Round 0的候选对")
-            
-            stats_history = self.train_one_round(
+                print(f"\n复用上一轮候选对 (Round {round_num-1} -> Round {round_num})")
+                prev_round = round_num - 1
+                candidates_path = self.save_dir / f"round_{prev_round}_candidates.json"
+                diagnosis_path = self.save_dir / f"round_{prev_round}_diagnosis_records.json"
+                if not diagnosis_path.exists():
+                    diagnosis_path = self.save_dir / f"round_{prev_round}_diagnosis.json"
+
+                if candidates_path.exists() and diagnosis_path.exists():
+                    pairs = self._prepare_pairs_for_training(
+                        candidates_path=candidates_path,
+                        diagnosis_path=diagnosis_path,
+                        dataset=dataset,
+                        components=components,
+                        round_num=round_num
+                    )
+                    if len(pairs) == 0:
+                        raise RuntimeError("复用后有效pairs为0")
+                else:
+                    raise FileNotFoundError(f"缺少复用文件: {candidates_path} 或 {diagnosis_path}")
+
+            self.train_one_round(
                 components['trainer'],
                 pairs,
                 components['tokenizer'],
                 round_num
             )
-            
+
             final_ckpt_path = self.save_dir / f"round_{round_num}_final"
             components['trainer'].save_checkpoint(final_ckpt_path, round_num)
-            print(f"✅ Round {round_num} checkpoint已保存: {final_ckpt_path}")
-            
             self.save_training_log()
-        
+
         end_time = datetime.now()
         duration = end_time - start_time
-        
+
         print(f"\n{'='*60}")
         print("✅ Stage 2训练完成！")
         print(f"{'='*60}")
@@ -1422,7 +1646,6 @@ class Stage2Trainer:
         print(f"保存目录: {self.save_dir}")
         print(f"训练日志: {self.log_file}")
         print(f"{'='*60}\n")
-
 
 def main():
     """主函数"""
@@ -1451,7 +1674,7 @@ def main():
         config.steps_per_round = 10
         config.num_candidates = 2
         config.temperatures = [0.7, 1.5]
-        config.max_new_tokens = 32
+        config.max_new_tokens = 128
     
     config.print_config()
     

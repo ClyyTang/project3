@@ -1,0 +1,69 @@
+{
+  "timestamp": "2026-03-16 21:34:56",
+  "counts": {
+    "candidates": 650,
+    "diagnosis": 650,
+    "cand_diag_match": true,
+    "unique_diag_sample_ids": 650,
+    "expected_total_samples": 4500,
+    "coverage_pct": 14.444
+  },
+  "fallback": {
+    "count": 0,
+    "pct": 0.0
+  },
+  "error_type_distribution": {
+    "perception": 591,
+    "unknown": 59
+  },
+  "unknown": {
+    "count": 59,
+    "pct": 9.077
+  },
+  "score_gap": {
+    "with_gap_count": 650,
+    "small_gap_count": 66,
+    "small_gap_pct": 10.154,
+    "negative_gap_count": 0,
+    "mean": 0.074788,
+    "min": 7.2e-05,
+    "max": 0.358037,
+    "threshold": 0.01
+  },
+  "gates": {
+    "fallback_le_2pct": {
+      "value": 0.0,
+      "threshold": 2.0,
+      "pass": true
+    },
+    "unknown_le_15pct": {
+      "value": 9.077,
+      "threshold": 15.0,
+      "pass": true
+    },
+    "small_gap_le_20pct": {
+      "value": 10.154,
+      "threshold": 20.0,
+      "pass": true
+    },
+    "dup_eq_0": {
+      "value": 0,
+      "threshold": 0,
+      "pass": true
+    }
+  },
+  "all_gates_pass": true,
+  "merge_info": {
+    "round_id": 0,
+    "id_mode": "evenodd",
+    "shard_size": 2250,
+    "shard0_candidates": 350,
+    "shard1_candidates": 300,
+    "shard0_diagnosis": 350,
+    "shard1_diagnosis": 300,
+    "dup_candidates_removed": 0,
+    "dup_diagnosis_removed": 0,
+    "missing_sample_id_candidates": 0,
+    "missing_sample_id_diagnosis": 0
+  }
+}

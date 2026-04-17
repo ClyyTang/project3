@@ -11,13 +11,13 @@ class Stage2Config:
     """Stage 2 Multi-task GSPO 配置"""
     
     # ==================== 候选生成配置 ====================
-    num_candidates: int = 3
+    num_candidates: int = 2
     """每个样本生成几个候选 CoT"""
     
     temperatures: List[float] = None
     """采样温度列表"""
     
-    max_new_tokens: int = 300
+    max_new_tokens: int = 192
     """生成的最大 token 数"""
     
     # ==================== GSPO 核心参数 ====================
@@ -34,10 +34,10 @@ class Stage2Config:
     num_rounds: int = 3
     """总共训练几轮"""
     
-    steps_per_round: int = 4100
+    steps_per_round: int = 19000
     """每轮训练多少步"""
     
-    batch_size: int = 2
+    batch_size: int = 1
     """Batch size"""
     
     # ==================== 路径配置 ====================
@@ -47,7 +47,7 @@ class Stage2Config:
     image_base_path: str = "/home/ubuntu/data1/lyy/full_rlds_project-3/images"
     """图片根目录"""
     
-    stage1_model_path: str = "/home/ubuntu/data1/lyy/full_rlds_project-3/checkpoints/stage1_final"
+    stage1_model_path: str = '/home/ubuntu/data1/lyy/full_rlds_project-3/checkpoints/stage1_final'
     """Stage 1 SFT 模型路径"""
     
     save_dir: str = "/home/ubuntu/data1/lyy/full_rlds_project-3/stage2/checkpoints"

@@ -70,7 +70,7 @@ class RiskTrainer:
                 lr=config.learning_rate
             )
 
-        self.scaler = GradScaler()
+        # self.scaler = GradScaler()  # removed for bf16
         self.stats_history = []
         self._global_step = 0
 
@@ -347,7 +347,7 @@ class RiskTrainer:
         self.vla.train()
 
         # 截断超长序列（和stage2一致）
-        max_len = 400
+        max_len = 192
         for key in ['chosen', 'rejected']:
             input_key = f'{key}_input_ids'
             label_key = f'{key}_labels'
@@ -363,7 +363,7 @@ class RiskTrainer:
                     batch[label_key][:, -keep_back:]
                 ], dim=1)
 
-        with autocast(dtype=torch.float16):
+        with torch.amp.autocast("cuda", dtype=torch.bfloat16):
             # === 1. Forward Chosen（获取辅助输出）===
             chosen_outputs = self.vla(
                 pixel_values=batch['pixel_values'],
@@ -422,8 +422,8 @@ class RiskTrainer:
 
         # === 4. 反向传播 ===
         self.optimizer.zero_grad()
-        self.scaler.scale(total_loss).backward()
-        self.scaler.unscale_(self.optimizer)
+        total_loss.backward()
+        # scaler removed
 
         # 修3：分组梯度裁剪
         # risk heads 单独裁剪（更严格），防止随机初始化早期梯度爆炸
@@ -444,11 +444,11 @@ class RiskTrainer:
         grad_norm = max(risk_grad_norm, base_grad_norm)
 
         if not (torch.isnan(grad_norm) or torch.isinf(grad_norm)):
-            self.scaler.step(self.optimizer)
+            self.optimizer.step()
         else:
             print(f"  ⚠️  梯度异常 (risk={risk_grad_norm:.3f}, "
                   f"base={base_grad_norm:.3f})，跳过本步")
-        self.scaler.update()
+        # scaler removed
 
         self._global_step = getattr(self, '_global_step', 0) + 1
         stats = {**loss_stats, 'grad_norm': grad_norm.item()}

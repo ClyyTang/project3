@@ -88,6 +88,12 @@ class Stage3Trainer:
 
     def __init__(self, config: Stage3Config, args):
         self.config = config
+        # 环境变量覆盖 save_dir（分片用）
+        import os as _os
+        _env_save = _os.environ.get('STAGE3_SAVE_DIR')
+        if _env_save:
+            self.config.save_dir = _env_save
+            print(f"  [分片模式] save_dir 覆盖为: {_env_save}")
         self.args = args
         self.device = config.device
 
@@ -319,6 +325,58 @@ class Stage3Trainer:
             verbose=True
         )
         risk_vla = risk_vla.to(self.device)
+        # compat_use_mor_v2_start
+        _patched = False
+        for path_name in ["base_vla.llm_backbone", "llm_backbone", "vla.llm_backbone", "base_vla.vla.llm_backbone"]:
+            try:
+                obj = risk_vla
+                for part in path_name.split("."):
+                    obj = getattr(obj, part)
+                if not hasattr(obj, "use_mor"):
+                    obj.use_mor = False
+                if not hasattr(obj, "use_mora"):
+                    obj.use_mora = False
+                print(f"[compat] use_mor/use_mora set on risk_vla.{path_name}")
+                _patched = True
+                break
+            except Exception:
+                continue
+
+        if not _patched:
+            for name, mod in risk_vla.named_modules():
+                if "LLaMa2LLMBackbone" in type(mod).__name__:
+                    if not hasattr(mod, "use_mor"):
+                        mod.use_mor = False
+                    if not hasattr(mod, "use_mora"):
+                        mod.use_mora = False
+                    print(f"[compat] use_mor/use_mora set on module: {name}")
+                    _patched = True
+                    break
+
+        if not _patched:
+            raise RuntimeError("[compat] 未找到 LLaMa2LLMBackbone，无法注入 use_mor/use_mora")
+        # compat_use_mor_v2_end
+
+        # codex_dtype_guard_v2
+        try:
+            if hasattr(risk_vla, "config"):
+                risk_vla.config.use_cache = False
+        except Exception:
+            pass
+        total_n, train_n = 0, 0
+        for name, param in risk_vla.named_parameters():
+            total_n += param.numel()
+            if param.requires_grad:
+                if param.dtype != torch.float32:
+                    param.data = param.data.float()
+                train_n += param.numel()
+            else:
+                if param.dtype != torch.bfloat16:
+                    param.data = param.data.to(torch.bfloat16)
+        if train_n == 0:
+            raise RuntimeError("dtype_guard后无可训练参数，请检查冻结策略")
+        print(f"[dtype_guard] trainable params: {train_n/1e6:.2f}M / {total_n/1e6:.2f}M")
+
 
         # [2] 全局归一化参数（训练开始前统计一次）
         print("\n[2/5] 计算全局 chosen_score 归一化参数...")
@@ -556,9 +614,14 @@ class Stage3Trainer:
                 start_idx = 0
 
         vla.eval()
+        vla.float()  # 推理统一fp32
 
         for i in tqdm(range(start_idx, len(dataset)),
                       desc="生成候选", initial=start_idx, total=len(dataset)):
+            # stage3_shard_skip_v1
+            if hasattr(self, 'args') and self.args.candidate_num_shards > 1:
+                if i % self.args.candidate_num_shards != self.args.candidate_shard_id:
+                    continue
             sample = dataset[i]
             try:
                 episode_folder = sample.get('image_path') or sample.get('episode_id')
@@ -672,6 +735,12 @@ class Stage3Trainer:
         )
 
         print(f"\n✅ 生成完成: {len(pairs)} 个候选对")
+        # 推理完毕，冻结层转回 bfloat16 为训练节省显存
+        vla.train()
+        for name, param in vla.named_parameters():
+            if not param.requires_grad:
+                param.data = param.data.to(torch.bfloat16)
+        print("  ✓ 冻结层已转回 bfloat16")
         return pairs
 
     def _save_checkpoint_with_progress(
@@ -759,6 +828,23 @@ class Stage3Trainer:
         """训练一轮"""
         print(f"\n{'='*60}")
         print(f"Round {round_num}: GSPO训练")
+
+
+        # stage3_aux_autofill_hook_v1
+        if round_num >= 1:
+            try:
+                import subprocess, sys, os
+                hook = os.path.join(os.path.dirname(__file__), "auto_fill_aux_labels_stage3.py")
+                subprocess.run([sys.executable, hook, "--round", str(round_num)], check=True)
+            except Exception as e:
+                print(f"  ⚠️ stage3 aux auto-fill 失败: {e}")
+            if round_num >= 1:
+                try:
+                    import subprocess, sys, os
+                    hook = os.path.join(os.path.dirname(__file__), "auto_fill_aux_labels_stage3.py")
+                    subprocess.run([sys.executable, hook, "--round", str(round_num)], check=True)
+                except Exception as e:
+                    print(f"  ⚠️ stage3 aux auto-fill 失败: {e}")
         print(f"{'='*60}")
 
         # ⭐ 安全注入：确保 aux_labels 不因断点恢复而丢失
@@ -881,6 +967,7 @@ class Stage3Trainer:
         # === Step 1: 重新生成候选并打分 ===
         print(f"\n[Step 1/4] 重新生成候选CoT并打分...")
         vla.eval()
+        vla.float()  # 推理统一fp32
         new_diagnosis_records = []
 
         for i in tqdm(range(len(dataset)), desc="重新打分"):
@@ -944,7 +1031,9 @@ class Stage3Trainer:
         print(f"\n[Step 3/4] 初始化 AuxiliaryLabeler...")
         labeler = AuxiliaryLabeler(
             train_dataset_path=self.config.data_path,
-            qwen_api_base="http://localhost:8000",
+
+            qwen_api_base="http://localhost:9998",
+
             qwen_model_name="Qwen3-VL-32B-Instruct",
             extract_keywords=True
         )
@@ -1052,6 +1141,10 @@ class Stage3Trainer:
             pairs = self.generate_candidates_for_round(components, dataset, round_num)
 
             # 训练
+            if getattr(self.args, 'candidate_only', False):
+                print(f"  [candidate_only] Round {round_num} 候选生成完毕，跳过训练")
+                return
+
             self.train_one_round(components['trainer'], pairs,
                                  components['tokenizer'], round_num)
 
@@ -1080,6 +1173,9 @@ def main():
     parser.add_argument('--test', action='store_true', help='测试模式')
     parser.add_argument('--save_interval', type=int, default=400)
     parser.add_argument('--keep_checkpoints', type=int, default=3)
+    parser.add_argument('--candidate_num_shards', type=int, default=1, help='候选生成分片总数')
+    parser.add_argument('--candidate_shard_id', type=int, default=0, help='当前分片ID')
+    parser.add_argument('--candidate_only', action='store_true', help='只生成候选，不训练')
     args = parser.parse_args()
 
     config = Stage3Config()
@@ -1090,7 +1186,7 @@ def main():
         config.steps_per_round = 10
         config.num_candidates = 2
         config.temperatures = [0.7, 1.5]
-        config.max_new_tokens = 32
+        config.max_new_tokens = 256
 
     config.print_config()
 

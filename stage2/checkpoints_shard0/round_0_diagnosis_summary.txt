@@ -1,0 +1,236 @@
+================================================================================
+Round 0 完整诊断总结
+================================================================================
+
+【整体统计】
+--------------------------------------------------------------------------------
+总样本数: 2250
+正常样本: 1463 (65.0%)
+弱样本: 787 (35.0%)
+
+分数统计:
+  Chosen平均分: 0.431
+  Rejected平均分: 0.354
+  平均Gap: 0.077
+
+分数区间分布:
+  [0.8, 1.0]: 0 样本 (0.0%)
+  [0.6, 0.8): 90 样本 (4.0%)
+  [0.4, 0.6): 1192 样本 (53.0%)
+  [0.0, 0.4): 968 样本 (43.0%)
+
+【弱样本分析】
+--------------------------------------------------------------------------------
+弱样本定义: Chosen分数最低的35% (787个)
+
+错误类型分布:
+  perception: 783 (99.5%)
+
+【详细弱样本列表】
+--------------------------------------------------------------------------------
+
+#1. 样本ID: 501 | Chosen: 0.221 | Gap: 0.010 | 错误: perception
+指令: Ascend to a large , gray building with a decorative roofline , then go directly ...
+--------------------------------------------------------------------------------
+
+#2. 样本ID: 2098 | Chosen: 0.241 | Gap: 0.001 | 错误: perception
+指令: Start by slightly ascending towards a medium - sized , white spherical lamp post...
+--------------------------------------------------------------------------------
+
+#3. 样本ID: 504 | Chosen: 0.244 | Gap: 0.003 | 错误: perception
+指令: Move forward to a location characterized by black - colored , grid - like reflec...
+--------------------------------------------------------------------------------
+
+#4. 样本ID: 357 | Chosen: 0.245 | Gap: 0.017 | 错误: perception
+指令: Proceed towards the white circular feature that is small compared to surrounding...
+--------------------------------------------------------------------------------
+
+#5. 样本ID: 1487 | Chosen: 0.247 | Gap: 0.003 | 错误: perception
+指令: Move ahead to the large building characterized by its gray color and rectangular...
+--------------------------------------------------------------------------------
+
+#6. 样本ID: 1410 | Chosen: 0.247 | Gap: 0.005 | 错误: perception
+指令: Proceed straight towards the dark grey modern skyscraper , characterized by its ...
+--------------------------------------------------------------------------------
+
+#7. 样本ID: 513 | Chosen: 0.255 | Gap: 0.032 | 错误: perception
+指令: Proceed straight to the large gray building with a triangular sloped roof , then...
+--------------------------------------------------------------------------------
+
+#8. 样本ID: 1207 | Chosen: 0.255 | Gap: 0.008 | 错误: perception
+指令: Proceed forward to the dark building with a grid - like pattern of windows , fea...
+--------------------------------------------------------------------------------
+
+#9. 样本ID: 1295 | Chosen: 0.260 | Gap: 0.007 | 错误: perception
+指令: Proceed directly toward the gray building featuring large arched windows with gr...
+--------------------------------------------------------------------------------
+
+#10. 样本ID: 545 | Chosen: 0.260 | Gap: 0.002 | 错误: perception
+指令: Proceed directly ahead to a * medium to large building * in the lower center are...
+--------------------------------------------------------------------------------
+
+#11. 样本ID: 2145 | Chosen: 0.260 | Gap: 0.006 | 错误: perception
+指令: Elevate to a light brown residential building with multiple windows and a fire e...
+--------------------------------------------------------------------------------
+
+#12. 样本ID: 763 | Chosen: 0.263 | Gap: 0.001 | 错误: perception
+指令: Proceed straight to a medium - sized brick building with red color , fire escape...
+--------------------------------------------------------------------------------
+
+#13. 样本ID: 1146 | Chosen: 0.263 | Gap: 0.019 | 错误: perception
+指令: Move upward to the large white building with a roof , then slightly proceed forw...
+--------------------------------------------------------------------------------
+
+#14. 样本ID: 901 | Chosen: 0.268 | Gap: 0.007 | 错误: perception
+指令: Keep going straight to a green medium - sized architectural landmark with a dome...
+--------------------------------------------------------------------------------
+
+#15. 样本ID: 404 | Chosen: 0.272 | Gap: 0.008 | 错误: perception
+指令: Move forward to the beige building with large curved windows , then slightly asc...
+--------------------------------------------------------------------------------
+
+#16. 样本ID: 1383 | Chosen: 0.272 | Gap: 0.015 | 错误: perception
+指令: Elevate to a large gray building with a clock , then advance forward to a medium...
+--------------------------------------------------------------------------------
+
+#17. 样本ID: 274 | Chosen: 0.273 | Gap: 0.002 | 错误: perception
+指令: Advance forward to a large , multi - story residential building with a white ext...
+--------------------------------------------------------------------------------
+
+#18. 样本ID: 682 | Chosen: 0.273 | Gap: 0.014 | 错误: perception
+指令: Advance toward the gray building characterized by a medium to large size and a r...
+--------------------------------------------------------------------------------
+
+#19. 样本ID: 674 | Chosen: 0.275 | Gap: 0.032 | 错误: perception
+指令: Ascend to a gray building with large rectangular windows , then proceed to a bro...
+--------------------------------------------------------------------------------
+
+#20. 样本ID: 472 | Chosen: 0.276 | Gap: 0.005 | 错误: perception
+指令: Begin by elevating to a beige skyscraper that features tall vertical windows and...
+--------------------------------------------------------------------------------
+
+#21. 样本ID: 73 | Chosen: 0.276 | Gap: 0.009 | 错误: perception
+指令: Proceed straight ahead towards the tall gray building with a rectangular shape a...
+--------------------------------------------------------------------------------
+
+#22. 样本ID: 635 | Chosen: 0.277 | Gap: 0.023 | 错误: perception
+指令: Rise to a large , flat , and gray rooftop , then take a slight right and continu...
+--------------------------------------------------------------------------------
+
+#23. 样本ID: 2007 | Chosen: 0.277 | Gap: 0.016 | 错误: perception
+指令: Proceed to the large , grey building featuring an art deco design , then slightl...
+--------------------------------------------------------------------------------
+
+#24. 样本ID: 1527 | Chosen: 0.278 | Gap: 0.033 | 错误: perception
+指令: Ascend to the large , brown building characterized by its rectangular structure ...
+--------------------------------------------------------------------------------
+
+#25. 样本ID: 1017 | Chosen: 0.278 | Gap: 0.007 | 错误: perception
+指令: Climb the light brown skyscraper , which is tall with vertical lines and large i...
+--------------------------------------------------------------------------------
+
+#26. 样本ID: 74 | Chosen: 0.280 | Gap: 0.010 | 错误: perception
+指令: Walk straight to the medium - sized building with a green color , triangular roo...
+--------------------------------------------------------------------------------
+
+#27. 样本ID: 1980 | Chosen: 0.281 | Gap: 0.017 | 错误: perception
+指令: Begin your journey by ascending a white , medium - sized building with a cuboid ...
+--------------------------------------------------------------------------------
+
+#28. 样本ID: 945 | Chosen: 0.281 | Gap: 0.036 | 错误: perception
+指令: Proceed directly ahead to the structure characterized by gray and red colors , f...
+--------------------------------------------------------------------------------
+
+#29. 样本ID: 1387 | Chosen: 0.281 | Gap: 0.002 | 错误: perception
+指令: Proceed forward to the brown water tower , which is a medium industrial structur...
+--------------------------------------------------------------------------------
+
+#30. 样本ID: 1298 | Chosen: 0.282 | Gap: 0.034 | 错误: perception
+指令: Start by proceeding directly towards the large brown building identified by its ...
+--------------------------------------------------------------------------------
+
+#31. 样本ID: 715 | Chosen: 0.282 | Gap: 0.009 | 错误: perception
+指令: Continue moving straight towards the gray , large building , characterized by it...
+--------------------------------------------------------------------------------
+
+#32. 样本ID: 1541 | Chosen: 0.282 | Gap: 0.002 | 错误: perception
+指令: Proceed directly ahead to a residential building characterized by a brick red an...
+--------------------------------------------------------------------------------
+
+#33. 样本ID: 1571 | Chosen: 0.283 | Gap: 0.000 | 错误: perception
+指令: Begin by climbing to a large building characterized by a dark color , a brick te...
+--------------------------------------------------------------------------------
+
+#34. 样本ID: 1201 | Chosen: 0.283 | Gap: 0.015 | 错误: perception
+指令: Navigate upwards to a large gray building characterized by large windows and pos...
+--------------------------------------------------------------------------------
+
+#35. 样本ID: 508 | Chosen: 0.283 | Gap: 0.004 | 错误: perception
+指令: Proceed directly to a medium - sized , blue - gray building characterized by gri...
+--------------------------------------------------------------------------------
+
+#36. 样本ID: 1681 | Chosen: 0.284 | Gap: 0.009 | 错误: perception
+指令: Proceed straight towards the white and red brick building featuring a U - shaped...
+--------------------------------------------------------------------------------
+
+#37. 样本ID: 1186 | Chosen: 0.285 | Gap: 0.022 | 错误: perception
+指令: Walk directly towards the light gray building with an antenna on its rooftop , w...
+--------------------------------------------------------------------------------
+
+#38. 样本ID: 578 | Chosen: 0.285 | Gap: 0.022 | 错误: perception
+指令: Proceed forward to a white modern office building featuring large rectangular wi...
+--------------------------------------------------------------------------------
+
+#39. 样本ID: 1846 | Chosen: 0.286 | Gap: 0.028 | 错误: perception
+指令: Move forward to the large gray rectangular building with a flat roof , then slig...
+--------------------------------------------------------------------------------
+
+#40. 样本ID: 523 | Chosen: 0.287 | Gap: 0.028 | 错误: perception
+指令: Proceed directly ahead to a medium - sized , green landmark characterized by a d...
+--------------------------------------------------------------------------------
+
+#41. 样本ID: 1703 | Chosen: 0.287 | Gap: 0.047 | 错误: perception
+指令: Proceed directly towards the greyish - brown residential building featuring larg...
+--------------------------------------------------------------------------------
+
+#42. 样本ID: 970 | Chosen: 0.288 | Gap: 0.037 | 错误: perception
+指令: Veer left towards the beige skyscraper , characterized by its tall structure wit...
+--------------------------------------------------------------------------------
+
+#43. 样本ID: 1790 | Chosen: 0.288 | Gap: 0.059 | 错误: perception
+指令: Elevate to a beige and red building characterized by multiple windows and a tall...
+--------------------------------------------------------------------------------
+
+#44. 样本ID: 1619 | Chosen: 0.288 | Gap: 0.071 | 错误: perception
+指令: Proceed directly ahead to a large brown building characterized by a brick patter...
+--------------------------------------------------------------------------------
+
+#45. 样本ID: 378 | Chosen: 0.288 | Gap: 0.022 | 错误: perception
+指令: Move up to a gray , large building characterized by tall , arched windows . Go d...
+--------------------------------------------------------------------------------
+
+#46. 样本ID: 1168 | Chosen: 0.288 | Gap: 0.003 | 错误: perception
+指令: Begin by ascending a modern office building characterized by its large size , da...
+--------------------------------------------------------------------------------
+
+#47. 样本ID: 2109 | Chosen: 0.288 | Gap: 0.013 | 错误: perception
+指令: " Continue moving straight toward a large , multi - story structure characterize...
+--------------------------------------------------------------------------------
+
+#48. 样本ID: 2152 | Chosen: 0.289 | Gap: 0.021 | 错误: perception
+指令: Walk directly to the large white building with a striped pattern , then veer lef...
+--------------------------------------------------------------------------------
+
+#49. 样本ID: 428 | Chosen: 0.290 | Gap: 0.019 | 错误: perception
+指令: Proceed straight to the medium - sized , dark - colored apartment building , cha...
+--------------------------------------------------------------------------------
+
+#50. 样本ID: 1977 | Chosen: 0.290 | Gap: 0.029 | 错误: perception
+指令: Proceed directly to the structure characterized by its red and white color , a r...
+--------------------------------------------------------------------------------
+
+【建议】
+--------------------------------------------------------------------------------
+1. 为787个弱样本生成辅助标签
+2. Round 1训练时启用辅助loss
+================================================================================

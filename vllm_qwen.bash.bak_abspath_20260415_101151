@@ -1,0 +1,67 @@
+#!/bin/bash
+
+# ==============================================================================
+# ��������
+# ==============================================================================
+MODEL_PATH="/home/ubuntu/data1/lk/project/model/qwen3_vl_32b_instruct/Qwen/Qwen3-VL-32B-Instruct"
+PORT=9998
+GPUS="1,4" 
+TP_SIZE=2
+
+echo "? Starting Qwen3-VL-32B Optimized Service..."
+
+# ==============================================================================
+# ���������������޸�ͨ�ű���
+# ==============================================================================
+# 防止 ~/.local 的 torch 2.7.1 污染(vllm 0.11.0 需要 torch 2.8)
+export PYTHONNOUSERSITE=1
+unset PYTHONPATH
+
+export CUDA_VISIBLE_DEVICES=${GPUS}
+export RAY_TMPDIR=/home/ubuntu/data1/ray_tmp
+
+# 1. ���� vLLM 0.11.0 ��ǿ��Ҫ��
+export VLLM_USE_V1=1
+
+# 2. ���׽��õ��� 'invalid argument' ���Զ��� All-Reduce (�ؼ��޸�)
+export VLLM_SKIP_CUSTOM_ALL_REDUCE=1
+export NCCL_P2P_DISABLE=1          # A6000 1,5��λͨ���� PCIe Root��ǿ�ƹر� P2P ��ϵͳ�ڴ�
+export NCCL_IB_DISABLE=1
+export NCCL_SHM_DISABLE=0          # ���뿪�������ڴ棬�����࿨ͨ��ȫ����
+
+# 3. �Դ�����Ż�
+export PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True"
+
+# ������������
+ray stop --force 2>/dev/null
+
+# ==============================================================================
+# vLLM ����΢��˵����
+# --enforce-eager: ���� CUDA Graph�����׽������ʱ�� Warm-up ������
+# --distributed-executor-backend mp: ����˫�� mp ģʽ�� ray ���ȶ���
+# --limit-mm-per-prompt: ������ͼ֧�֡�
+# ==============================================================================
+
+python3 -m vllm.entrypoints.openai.api_server \
+    --model ${MODEL_PATH} \
+    --served-model-name Qwen3-VL-32B-Instruct \
+    --host 0.0.0.0 \
+    --port ${PORT} \
+    --trust-remote-code \
+    --dtype bfloat16 \
+    --tensor-parallel-size ${TP_SIZE} \
+    --distributed-executor-backend mp \
+    \
+    --max-model-len 16384 \
+    --gpu-memory-utilization 0.9 \
+    --max-num-seqs 16 \
+    --max-num-batched-tokens 8192 \
+    \
+    --limit-mm-per-prompt '{"image": 100}' \
+    --mm-processor-kwargs '{"max_dynamic_patch": 4}' \
+    \
+    --enable-chunked-prefill \
+    --disable-custom-all-reduce \
+    --enforce-eager
+
+#(lyy_qwen) ubuntu@ubuntu-SYS-420GP-TNR:~/data1/lyy/full_rlds_project$ nohup bash vllm.bash &

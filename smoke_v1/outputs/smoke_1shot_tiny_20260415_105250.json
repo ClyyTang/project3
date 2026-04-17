@@ -1,0 +1,70 @@
+{
+  "stage": "tiny",
+  "timestamp": "20260415_105250",
+  "request": {
+    "model": "Qwen3-VL-32B-Instruct",
+    "temperature": 0.2,
+    "max_tokens": 1024,
+    "messages": [
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "image_url",
+            "image_url": {
+              "url_length": 118358,
+              "source_file": "/home/ubuntu/data1/lyy/full_rlds_project-3/images/env_airsim_sh/astar_data/medium_short_updown/2025-01-19_13-19-22_805313/20250119_131941_20.png"
+            }
+          },
+          {
+            "type": "text",
+            "text": "What do you see in this image? Answer in one short sentence."
+          }
+        ]
+      }
+    ]
+  },
+  "result": {
+    "ok": true,
+    "tag": "tiny",
+    "latency": 11.038515567779541,
+    "response_text": "A futuristic cityscape with tall, sleek skyscrapers, greenery lining the streets, and a prominent glass tower under a partly cloudy sky.",
+    "error": null,
+    "raw_response": {
+      "id": "chatcmpl-1add4e588b9b41d2b4d476cc51c86bb8",
+      "object": "chat.completion",
+      "created": 1776221561,
+      "model": "Qwen3-VL-32B-Instruct",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "A futuristic cityscape with tall, sleek skyscrapers, greenery lining the streets, and a prominent glass tower under a partly cloudy sky.",
+            "refusal": null,
+            "annotations": null,
+            "audio": null,
+            "function_call": null,
+            "tool_calls": [],
+            "reasoning_content": null
+          },
+          "logprobs": null,
+          "finish_reason": "stop",
+          "stop_reason": null,
+          "token_ids": null
+        }
+      ],
+      "service_tier": null,
+      "system_fingerprint": null,
+      "usage": {
+        "prompt_tokens": 88,
+        "total_tokens": 118,
+        "completion_tokens": 30,
+        "prompt_tokens_details": null
+      },
+      "prompt_logprobs": null,
+      "prompt_token_ids": null,
+      "kv_transfer_params": null
+    }
+  }
+}

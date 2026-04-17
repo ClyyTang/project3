@@ -358,7 +358,7 @@ class MultiTaskGSPOTrainer:
             
         # 统计历史
         self.stats_history = []
-        self.scaler = GradScaler()
+        # # self.scaler = GradScaler()  # removed for bf16  # 移除：bf16不需要scaler
         print(f"✅ 启用FP16混合精度训练")
     
         print(f"\n{'='*60}")
@@ -575,9 +575,22 @@ class MultiTaskGSPOTrainer:
                 'action_validity': [batch, 1]
             } 或 None
         """
-        # 检查是否所有样本都有aux_labels
-        if not all(p.get('aux_labels') is not None for p in pairs):
-            return None
+        # 检查aux_labels：缺失时补默认，避免整batch aux loss被置0
+        missing_cnt = 0
+        for p in pairs:
+            if p.get('aux_labels') is None:
+                missing_cnt += 1
+                score = float(p.get('chosen_score', 0.5) or 0.5)
+                gap = abs(float(p.get('score_gap', 0.0) or 0.0))
+                p['aux_labels'] = {
+                    'keywords': [0.0] * 34,
+                    'direction': 0,
+                    'cot_quality': max(0.0, min(1.0, score)),
+                    'action_validity': max(0.0, min(1.0, 0.4 + 0.6 * min(gap, 1.0))),
+                }
+        if missing_cnt > 0 and not hasattr(self, '_aux_missing_warned'):
+            print(f"  ⚠️ batch内缺失aux_labels: {missing_cnt}/{len(pairs)}，已自动补齐默认值")
+            self._aux_missing_warned = True
         
         # 提取并stack
         keywords_list = []
@@ -664,7 +677,7 @@ class MultiTaskGSPOTrainer:
         self.vla.train()
         
         # ⭐ 智能浓缩超长序列（保留开头+结尾+action）
-        max_len = 400
+        max_len = 192
         
         for key in ['chosen', 'rejected']:
             input_key = f'{key}_input_ids'
@@ -690,7 +703,7 @@ class MultiTaskGSPOTrainer:
         
         
         # ⭐ FP16混合精度：包装forward部分
-        with autocast(dtype=torch.float16):
+        with torch.amp.autocast("cuda", dtype=torch.bfloat16):
             # === 1. Forward Chosen（获取辅助输出）===
             chosen_outputs = self.vla(
                 pixel_values=batch['pixel_values'],
@@ -759,18 +772,18 @@ class MultiTaskGSPOTrainer:
         
         # ⭐ FP16: 反向传播（在autocast外面）
         self.optimizer.zero_grad()
-        self.scaler.scale(total_loss).backward()
+        total_loss.backward()
         
         # ⭐ FP16: 梯度裁剪（需要先unscale）
-        self.scaler.unscale_(self.optimizer)
+        # scaler removed
         grad_norm = torch.nn.utils.clip_grad_norm_(
             self.vla.parameters(),
             self.config.max_grad_norm
         )
         
         # ⭐ FP16: 更新参数
-        self.scaler.step(self.optimizer)
-        self.scaler.update()
+        self.optimizer.step()
+        # scaler removed
         
         # === 5. 统计信息 ===
         stats = {

@@ -21,9 +21,9 @@ class Stage3Config:
     max_grad_norm: float = 1.0
 
     # ==================== 训练流程配置 ====================
-    num_rounds: int = 3
-    steps_per_round: int = 4100
-    batch_size: int = 2
+    num_rounds: int = 1
+    steps_per_round: int = 19000
+    batch_size: int = 1
 
     # ==================== 路径配置 ====================
     data_path: str = "/home/ubuntu/data1/lyy/full_rlds_project-3/data/train_with_cot_4500.json"
@@ -32,10 +32,10 @@ class Stage3Config:
     # 使用时：aux_labels_path_template.format(round_num=0)
     aux_labels_path_template: str = "/home/ubuntu/data1/lyy/full_rlds_project-3/data/auxiliary_labels_round{round_num}.json"
 
-    image_base_path: str = "/home/ubuntu/data1/lyy/full_rlds_project/images"
+    image_base_path: str = "/home/ubuntu/data1/lyy/full_rlds_project-3/images"
 
     # ⭐ 改为从 stage2 权重开始训练
-    stage2_model_path: str = "/home/ubuntu/data1/lyy/full_rlds_project/3_training/checkpoints/stage1_sft"
+    stage2_model_path: str = '/home/ubuntu/data1/lyy/full_rlds_project-3/checkpoints/stage2_final'
 
     save_dir: str = "/home/ubuntu/data1/lyy/full_rlds_project-3/checkpoints/stage3_final"
 
